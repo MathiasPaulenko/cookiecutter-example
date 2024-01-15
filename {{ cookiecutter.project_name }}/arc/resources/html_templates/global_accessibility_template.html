@@ -1,0 +1,244 @@
+{% extends "base_template.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-lg-4 col-md-6 mb-2">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Total Rules Results')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <canvas id="rules-results-chart" width="250" height="250" class="chartjs-render-monitor" style="display: block; width: 250px; height: 250px;" ></canvas>
+                        <script type="text/javascript">
+                            if ($("#rules-results-chart").length) {
+                              var areaData = {
+                                labels: ["{{_('Passes')}}", "{{_('Violations')}}"],
+                                datasets: [{
+                                    data: ['{{global_results.total_passes}}', '{{global_results.total_violations}}'],
+                                    backgroundColor: [
+                                       "#21c576","#ed1919"
+                                    ],
+                                    borderColor: "rgba(0,0,0,0)"
+                                  }
+                                ]
+                              };
+                              var areaOptions = {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                segmentShowStroke: false,
+                                cutout: "70%",
+                                elements: {
+                                  arc: {
+                                      borderWidth: 4
+                                  }
+                                },
+                                legend: {
+                                  display: false
+                                },
+                                tooltips: {
+                                  enabled: true
+                                }
+                              }
+                              var rulesResultsChartPlugins = [
+                                {
+                                    afterDraw: function(chart) {
+                                  var width = chart.width,
+                                      height = chart.height,
+                                      ctx = chart.ctx;
+
+                                  ctx.restore();
+                                  var fontSize = 3.125;
+                                  ctx.font = "500 " + fontSize + "em sans-serif";
+                                  ctx.textBaseline = "middle";
+                                  ctx.fillStyle = "#666";
+                                  console.log(height)
+
+                                  var text = "{{global_results.violations_and_passes}}",
+                                      textX = Math.round((width - ctx.measureText(text).width) / 2),
+                                      textY = height / 2;
+                                  console.log(textX, textY)
+                                  ctx.fillText(text, textX, textY+20);
+                                  ctx.save();
+                                }
+                                }
+                              ]
+                              var rulesResultsChartCanvas = $("#rules-results-chart").get(0).getContext("2d");
+                              var rulesResultsChart = new Chart(rulesResultsChartCanvas, {
+                                type: 'doughnut',
+                                data: areaData,
+                                options: areaOptions,
+                                plugins: rulesResultsChartPlugins
+                              });
+                            }
+                        </script>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 center-table-card">
+                            <p>{{_('Status')}}</p>
+                            <p>
+                                <i class="status-passed-icon"></i>
+                                {{_('Passes')}}
+                            </p>
+                            <p>
+                                <i class="status-failed-icon"></i>
+                                {{_('Violations')}}
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{_('Progress')}}</p>
+                            <p>{{global_results.passes_percent}} %</p>
+                            <p>{{global_results.violations_percent}} %</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-2">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Rules impact')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <canvas id="impact-results-chart" width="250" height="250" class="chartjs-render-monitor" style="display: block; width: 250px; height: 400px;" ></canvas>
+                        <script type="text/javascript">
+                            if ($("#impact-results-chart").length) {
+                              var areaData = {
+                                labels: ["{{_('Minor')}}", "{{_('Moderate')}}", "{{_('Serious')}}", "{{_('Critical')}}"],
+                                datasets: [{
+                                    label: "{{_('Impact Results')}}",
+                                    data: ['{{global_results.impact_results.minor}}', '{{global_results.impact_results.moderate}}', '{{global_results.impact_results.serious}}', '{{global_results.impact_results.critical}}'],
+                                    backgroundColor: [
+                                       "#21c576","#FFE356FF","#ff9007","#ed1919"
+                                    ],
+                                    barThickness: 50
+                                  }
+                                ]
+                              };
+                              var areaOptions = {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                segmentShowStroke: false,
+                                scale:{
+                                    stepSize: 1,
+                                    beginAtZero: true,
+                                },
+                                plugins:{
+                                    legend:{
+                                        display: false
+                                    }
+                                },
+                              }
+                              var impactResultsChartCanvas = $("#impact-results-chart").get(0).getContext("2d");
+                              var impactResultsChart = new Chart(impactResultsChartCanvas, {
+                                type: 'bar',
+                                data: areaData,
+                                options: areaOptions
+                              });
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-2">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Analysis info</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <td>{{_('Execution start time')}}:</td>
+                                <td>{{global_data.results.start_time|format_datetime}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Execution end time')}}:</td>
+                                <td>{{global_data.results.end_time|format_datetime}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Environment')}}:</td>
+                                <td>{{global_data.environment}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Version')}}:</td>
+                                <td>{{global_data.version}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Application')}}:</td>
+                                <td>{{global_data.application}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Business area')}}:</td>
+                                <td>{{global_data.business_area}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Entity')}}:</td>
+                                <td>{{global_data.entity}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Executed by user')}}:</td>
+                                <td>{{global_data.user_code}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row results">
+        <div class="col-md-12">
+            <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">{{_('Accessibility Results Overview')}}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>
+                                            {{_('Test name')}}
+                                        </th>
+                                        <th class="text-center">
+                                            {{_('Violations')}}
+                                        </th>
+                                        <th class="text-center">
+                                            {{_('Passes')}}
+                                        </th>
+                                        <th class="text-center">
+                                            {{_('Incomplete')}}
+                                        </th>
+                                        <th class="text-center">
+                                            {{_('Inapplicable')}}
+                                        </th>
+                                        <th class="text-center">
+                                            {{_('Quality Gates')}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for report in reports %}
+                                        <tr>
+                                            <td><a href="./accessibility_{{report.name}}.html">{{report.name}}</a></td>
+                                            <td class="text-center">{{report.data.violations|count}}</td>
+                                            <td class="text-center">{{report.data.passes|count}}</td>
+                                            <td class="text-center">{{report.data.incomplete|count}}</td>
+                                            <td class="text-center">{{report.data.inapplicable|count}}</td>
+                                            <td class="text-center"><i class="status-{{report.data.quality_gates_result}}-icon"></i></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    {% endblock %}
+</div>
+
+{% block extra_js %}
+{% endblock %}

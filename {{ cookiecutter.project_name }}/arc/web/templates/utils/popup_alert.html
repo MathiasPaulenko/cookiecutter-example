@@ -1,0 +1,8 @@
+{% if button_enabled %}
+    <button class="btn btn-outline-success" onclick="showPopup('{{title}}', '{{text}}', '{{icon}}', '{{buttonCloseMessage}}', {{showConfirmButton|tojson}})">
+        {{buttonPopUpMessage}}</button>
+{% else %}
+    <script>
+      showPopup('{{title}}', '{{text}}', '{{icon}}', '{{buttonCloseMessage}}', {{showConfirmButton|tojson}})
+    </script>
+{% endif %}

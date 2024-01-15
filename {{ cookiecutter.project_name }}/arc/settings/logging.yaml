@@ -1,0 +1,102 @@
+version: 1
+disable_existing_loggers: False
+
+formatters:
+  fileFormatter:
+    format: '%(levelname).7s %(asctime)s [%(filename)s:%(lineno)d] %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+
+  consoleFormatter:
+    format: '%(levelname).7s %(asctime)s [%(filename)s:%(lineno)d] %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+
+
+handlers:
+  consoleHandler:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: consoleFormatter
+    stream: ext://sys.stdout
+
+  fileHandler:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: fileFormatter
+    filename: 'output/logs/pytalos.log'
+    mode: "a"
+    backupCount: 10
+    encoding: utf8
+
+
+loggers:
+  root:
+    level: DEBUG
+    handlers:
+      - fileHandler
+      - consoleHandler
+    propagate: 1
+
+  faker:
+    level: INFO
+    handlers:
+      - fileHandler
+    qualname: faker
+    propagate: 0
+
+  remote_connection:
+    level: INFO
+    handlers:
+      - fileHandler
+    qualname: selenium.webdriver.remote.remote_connection
+    propagate: 1
+
+  urllib3:
+    level: INFO
+    handlers:
+      - fileHandler
+    qualname: urllib3
+    propagate: 1
+
+  PIL:
+    level: INFO
+    handlers:
+      - fileHandler
+    qualname: PIL
+    propagate: 0
+
+  comtypes:
+    level: ERROR
+    handlers:
+      - fileHandler
+    qualname: comtypes
+    propagate: 0
+
+  behave:
+    level: INFO
+    handlers:
+      - fileHandler
+    qualname: behave
+    propagate: 0
+
+  appium:
+    level: INFO
+    handlers:
+      - fileHandler
+    qualname: appium
+    propagate: 0
+
+  requests:
+    level: INFO
+    handlers:
+      - fileHandler
+    qualname: requests
+    propagate: 0
+
+  selenium:
+    level: INFO
+    handlers:
+      - fileHandler
+    qualname: selenium
+    propagate: 0
+
+

@@ -1,0 +1,135 @@
+{% extends "base_template.html" %}
+{% block extra_head %}
+<!--FancyBox css -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css">
+<!-- Fancybox js -->
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+<style>
+
+    .table-results td{
+        padding: 1rem!important;
+    }
+
+    .visual-failed{
+        background-color: #f8d7da!important;
+    }
+    .visual-passed{
+        background-color: #d4edda!important;
+    }
+
+    .card-header h5{
+        padding-bottom: 15px!important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+    <div class="container-fluid">
+    <div class="row results">
+        <div class="col-md-12 mb-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{ _('Scenarios Overview') }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>{{ _('Scenario name') }}</th>
+                                    <th class="text-center">{{ _('Status') }}</th>
+                                    <th class="text-center">{{ _('Images to test') }}</th>
+                                    <th class="text-center">{{ _('Tests Passed') }}</th>
+                                    <th class="text-center">{{ _('Tests Failed') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for scenario in scenario_results.values() %}
+                                    <tr>
+                                        <td><a href="#scenario_{{ loop.index }}">{{ scenario.scenario_name }}</a></td>
+                                        <td class="text-center">
+                                            <i class="status-{{'passed' if scenario.diff == 0 else 'failed'}}-icon"></i>
+                                        </td>
+                                        <td class="text-center">{{ scenario.equal + scenario.diff }}</td>
+                                        <td class="text-center">{{ scenario.equal }}</td>
+                                        <td class="text-center">{{ scenario.diff }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% for scenario in scenario_results.values() %}
+        <div class="row results">
+            <div class="col-md-12 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 id="scenario_{{ loop.index }}" class="card-title">{{ _('Scenario') }}: {{ scenario.scenario_name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-results">
+                                <thead class="thead-dark">
+                                    <tr class="table-primary">
+                                        <th scope="col">{{ _('Original') }}</th>
+                                        <th scope="col">{{ _('Current') }}</th>
+                                        <th scope="col">{{ _('Difference') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for screenshot in scenario.screenshots.values() %}
+                                        <tr class="visual-{{ screenshot.result }}">
+                                            <td>
+                                                <div class="thumbnail-container">
+                                                    <a href="" data-fancybox>
+                                                        <img class="img-thumbnail" src="{{ screenshot.baseline }}">
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="thumbnail-container">
+                                                    <a href="" data-fancybox>
+                                                        <img class="img-thumbnail" src="{{ screenshot.current }}">
+                                                    </a>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {% if screenshot.diff is not none %}
+                                                <div class="thumbnail-container">
+                                                    <a href="" data-fancybox>
+                                                        <img class="img-thumbnail" src="{{ screenshot.diff }}">
+                                                    </a>
+                                                </div>
+                                                {% else %}
+                                                    {{ _('No difference') }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Custom Fancybox js -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".img-thumbnail").each((index, element) => {
+            $(element).parent().attr("href", $(element).attr("src"))
+        });
+    });
+</script>
+{% endblock %}

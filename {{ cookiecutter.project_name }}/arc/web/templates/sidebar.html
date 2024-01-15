@@ -1,0 +1,180 @@
+<nav id="sidebarMenu" class="col-lg-2 d-md-block p-3 sidebar collapse">
+    <div class="pt-3 menu-items">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a title="Dashboard" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}"
+                   aria-current="page" href="{{ url_for('home.dashboard') }}">
+                    <i class="bi bi-house"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a title="Results" class="nav-link {% if active_page == 'results' %}active{% endif %}"
+                   aria-current="page"
+                   href="{{ url_for('executions.executions') }}">
+                    <i class="bi bi-list-task"></i>
+                    <span>Results</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a title="Run" class="nav-link collapsed {% if active_page == 'run' %}active{% endif %}"
+                   href="#" data-bs-toggle="collapse"
+                   data-bs-target="#run-collapse"
+                   aria-expanded="{% if active_page == 'run' %}true{% else %}false{% endif %}">
+                    <i class="bi bi-rocket-takeoff"></i>
+                    <span>Run</span>
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+                <div class="collapse {% if active_page == 'run' %}show{% endif %}" id="run-collapse">
+                    <ul class="list-unstyled-padding">
+                        <li>
+                            <a title="Custom Run" href="{{ url_for('run_custom_executions.run_custom_execution') }}"
+                               class="nav-link link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                <i class="bi bi-ui-checks-grid"></i>
+                                <span>Custom Run</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a title="Run Features" href="{{ url_for('run_features.run_features') }}"
+                               class="nav-link link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                <i class="bi bi-file-earmark-play"></i>
+                                <span>Features</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a title="Run Scenarios" href="{{ url_for('run_scenarios.run_scenarios') }}"
+                               class="nav-link link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                <i class="bi bi-node-plus"></i>
+                                <span>Scenarios</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a title="Run Tags" href="{{ url_for('run_tags.run_by_tag') }}"
+                               class="nav-link link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                <i class="bi bi-ui-checks-grid"></i>
+                                <span>Tags</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a title="View executions" href="{{ url_for('view_executions.view_executions') }}"
+                               class="nav-link link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                <i class="bi bi-collection-play"></i>
+                                <span>View Executions</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a title="Help" class="nav-link collapsed {% if active_page == 'files' %}active{% endif %}"
+                   href="#" data-bs-toggle="collapse"
+                   data-bs-target="#files-collapse"
+                   aria-expanded="{% if active_page == 'files' %}true{% else %}false{% endif %}">
+                    <i class="bi bi-folder"></i>
+                    <span>Browse Files</span>
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+                <div class="collapse {% if active_page == 'files' %}show{% endif %}" id="files-collapse">
+                    <ul class="list-unstyled-padding">
+                        <li>
+                            <a title="Edit Features"
+                               class="nav-link {% if active_page == 'files' %}active{% endif %}"
+                               aria-current="page"
+                               href="{{ url_for('features.view_features') }}">
+                                <i class="bi bi-file-text"></i>
+                                <span>Features</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a title="Manage Data" class="nav-link {% if active_page == 'files' %}active{% endif %}"
+                               aria-current="page"
+                               href="{{ url_for('profiles.view_profile_files') }}">
+                                <i class="bi bi-file-earmark"></i>
+                                <span>Profiles</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a title="Help" class="nav-link collapsed {% if active_page == 'help' %}active{% endif %}"
+                   href="#" data-bs-toggle="collapse"
+                   data-bs-target="#documentation-collapse"
+                   aria-expanded="{% if active_page == 'help' %}true{% else %}false{% endif %}">
+                    <i class="bi bi-question-circle"></i>
+                    <span>Help</span>
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+                <div class="collapse {% if active_page == 'help' %}show{% endif %}" id="documentation-collapse">
+                    <ul class="list-unstyled-padding">
+                        <li>
+                            <a title="Documentation" target="_blank"
+                               href="https://santandernet.sharepoint.com/sites/Talos-Ecosystem/SitePages/es/Home.aspx"
+                               class="nav-link link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                <i class="bi bi bi-book"></i>
+                                <span>Documentation</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a title="Readme" href="{{ url_for('home.readme') }}"
+                               class="nav-link link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                <i class="bi bi-filetype-md"></i>
+                                <span>Readme</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a title="FAQ" target="_blank"
+                               href="https://santandernet.sharepoint.com/sites/Talos-Ecosystem/SitePages/TalosBDD/About%20TalosBDD/FAQ.aspx"
+                               class="nav-link link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                <i class="bi bi-patch-question"></i>
+                                <span>FAQ</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a title="Settings" class="nav-link collapsed {% if active_page == 'settings' %}active{% endif %}"
+                   href="#" data-bs-toggle="collapse"
+                   data-bs-target="#settings-collapse"
+                   aria-expanded="{% if active_page == 'settings' %}true{% else %}false{% endif %}">
+                    <i class="bi bi-house-gear"></i>
+                    <span>Settings</span>
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+                <div class="collapse {% if active_page == 'settings' %}show{% endif %}" id="settings-collapse">
+                    <ul class="list-unstyled-padding">
+                        <li>
+                            <a title="Talos Settings" href="{{ url_for('settings.settings') }}"
+                               class="nav-link link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                <i class="bi bi-gear"></i>
+                                <span>Talos Settings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a title="Configuration Files" href="{{ url_for('settings.configuration_files') }}"
+                               class="nav-link link-body-emphasis d-inline-flex text-decoration-none rounded">
+                                <i class="bi bi-file-earmark-medical"></i>
+                                <span>Configuration Files</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="sidebar_toggle">
+        <ul class="nav flex-column">
+            <li class="nav-item mb-1">
+                <a class="nav-link">
+                    <i class="bi {% if session.dark_mode %}bi-sun{% else %}bi-moon{% endif %}" id="color-mode"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">
+                    <i class="bi bi-chevron-double-left" id="sidebar-toggle"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

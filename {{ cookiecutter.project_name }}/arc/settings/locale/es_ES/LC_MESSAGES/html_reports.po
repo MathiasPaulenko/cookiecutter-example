@@ -1,0 +1,239 @@
+msgid "Global Report"
+msgstr "Reporte Global"
+
+msgid "Report for scenario"
+msgstr "Reporte del escenario"
+
+msgid "Return to global report"
+msgstr "Volver al reporte global"
+
+msgid "Return to feature"
+msgstr "Volver a la característica"
+
+msgid "Features"
+msgstr "Características"
+
+msgid "Total Features"
+msgstr "Características totales"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Passed"
+msgstr "Exitosos"
+
+msgid "Failed"
+msgstr "Fallidos"
+
+msgid "Skipped"
+msgstr "Omitidos"
+
+msgid "Scenarios"
+msgstr "Escenarios"
+
+msgid "Steps"
+msgstr "Pasos"
+
+msgid "Progress"
+msgstr "Estadística"
+
+msgid "Report for feature"
+msgstr "Reporte de la característica"
+
+msgid "Features Overview"
+msgstr "Resultados de las características"
+
+msgid "Scenarios Overview"
+msgstr "Resultados de los escenarios"
+
+msgid "Steps Overview"
+msgstr "Resultados de los pasos"
+
+msgid "Feature name"
+msgstr "Nombre de la característica"
+
+msgid "Scenario name"
+msgstr "Nombre de escenario"
+
+msgid "Tags"
+msgstr "Etiquetas"
+
+msgid "Total steps"
+msgstr "Pasos totales"
+
+msgid "Steps Passed"
+msgstr "Pasos exitosos"
+
+msgid "Steps passed"
+msgstr "Pasos exitosos"
+
+msgid "Steps Failed"
+msgstr "Pasos fallidos"
+
+msgid "Steps failed"
+msgstr "Pasos fallidos"
+
+msgid "Environment"
+msgstr "Entorno"
+
+msgid "Steps Skipped"
+msgstr "Pasos omitidos"
+
+msgid "Duration"
+msgstr "Duracion"
+
+msgid "Description"
+msgstr "Descripción"
+
+msgid "Run Info"
+msgstr "Datos de la ejecución"
+
+msgid "Operating system"
+msgstr "Sistema operativo"
+
+msgid "Driver"
+msgstr "Controlador"
+
+msgid "Total Scenarios"
+msgstr "Escenarios totales"
+
+msgid "Total Steps"
+msgstr "Pasos totales"
+
+msgid "Scenarios passed"
+msgstr "Escenarios pasados"
+
+msgid "Scenarios failed"
+msgstr "Escenarios fallidos"
+
+msgid "Passed Steps"
+msgstr "Pasos exitosos"
+
+msgid "Failed Steps"
+msgstr "Pasos fallidos"
+
+msgid "Steps Skipped"
+msgstr "Pasos omitidos"
+
+msgid "Skipped Steps"
+msgstr "Pasos omitidos"
+
+msgid "Execution start time"
+msgstr "Hora de inicio de la ejecución"
+
+msgid "Execution end time"
+msgstr "Hora de fin de la ejecución"
+
+msgid "Application"
+msgstr "Aplicación"
+
+msgid "Business area"
+msgstr "Area de negocio"
+
+msgid "Entity"
+msgstr "Entidad"
+
+msgid "Executed by user"
+msgstr "Ejecutado por el usuario"
+
+msgid "Step name"
+msgstr "Nombre del paso"
+
+msgid "Start"
+msgstr "Comienzo"
+
+msgid "Finish"
+msgstr "Finalizado"
+
+msgid "Location"
+msgstr "Localización"
+
+msgid "Expected result"
+msgstr "Resultado esperado"
+
+msgid "Obtained result"
+msgstr "Resultado obtenido"
+
+msgid "Result"
+msgstr "Resultado"
+
+msgid "Additional text"
+msgstr "Texto adicional"
+
+msgid "Step table"
+msgstr "Tabla del paso"
+
+msgid "Show step table data"
+msgstr "Mostrar tabla del paso"
+
+msgid "Hide step table data"
+msgstr "Ocultar tabla del paso"
+
+msgid "Request info"
+msgstr "Datos de la petición"
+
+msgid "Show request data"
+msgstr "Mostrar datos de la petición"
+
+msgid "Hide request data"
+msgstr "Ocultar datos de la petición"
+
+msgid "Show response data"
+msgstr "Mostrar datos de la respuesta"
+
+msgid "Hide response data"
+msgstr "Ocultar datos de la respuesta"
+
+msgid "Show evidence extra json"
+msgstr "Mostrar evidencia extra"
+
+msgid "Hide evidence extra json"
+msgstr "Ocultar evidencia extra"
+
+msgid "Endpoint"
+msgstr "URL"
+
+msgid "Params"
+msgstr "Parámetros"
+
+msgid "Headers"
+msgstr "Cabeceras"
+
+msgid "Body"
+msgstr "Cuerpo"
+
+msgid "No params"
+msgstr "Sin parámetros"
+
+msgid "No headers"
+msgstr "Sin cabeceras"
+
+msgid "No body"
+msgstr "Sin cuerpo"
+
+msgid "Response info"
+msgstr "Info de la respuesta"
+
+msgid "Show evidence"
+msgstr "Mostrar evidencia"
+
+msgid "Show info"
+msgstr "Mostrar información"
+
+msgid "Hide info"
+msgstr "Ocultar información"
+
+msgid "Api evidence info"
+msgstr "Envidencia de API"
+
+msgid "Show Api evidence info"
+msgstr "Mostrar evidencia de API"
+
+msgid "Hide Api evidence info"
+msgstr "Ocultar evidencia de API"
+
+msgid "Show evidence extra info"
+msgstr "Mostrar evidencia extra"
+
+msgid "Hide evidence extra info"
+msgstr "Ocultar evidencia extra"

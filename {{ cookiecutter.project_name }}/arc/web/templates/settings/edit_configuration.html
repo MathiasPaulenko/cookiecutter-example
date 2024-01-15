@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit setting{% endblock %}
+
+{% block head %}
+    <!--
+    Add your custom scripts here.
+    By example:
+    <script async type="text/javascript" src="/static/js/home_functions.js"></script>
+    -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/edit_configuration.js') }}"></script>
+{% endblock %}
+
+{% block main_content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('.configuration_files') }}">Configuration Files</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Configuration - {{ configuration_file_name }}</li>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Configuration info</h4>
+                    {% with section_values=section_values, form=form, sections=sections, url=url_for('.edit_configuration_file_by_name', configuration_file=configuration_file_name) %}
+                        {% include 'settings/configurations_form.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

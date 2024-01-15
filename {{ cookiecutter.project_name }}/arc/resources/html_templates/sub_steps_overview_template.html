@@ -1,0 +1,48 @@
+{% if internal_index is not defined %}
+    {% set internal_index = 1 %}
+{% endif %}
+{% if loop_id is not defined %}
+    {% set loop_id = step_index %}
+{% else %}
+    {% set loop_id = loop_id|string + '.' + step_index|string %}
+{% endif %}
+
+{% if extra_index is not none %}
+  {% set step_index = extra_index %}
+{% endif %}
+
+
+{% if step.sub_steps|count > 0 %}
+    {% for sub_step in step.sub_steps %}
+        {% set step_index = loop.index %}
+        <tr>
+          <td style="padding-left: {{internal_index}}em"><a href="#step-{{loop_id}}.{{step_index}}">{{loop_id}}.{{step_index}} - {{sub_step.name}}</a></td>
+          <td class="text-center">
+              <i class="status-{{sub_step.result.status if sub_step.result is defined and sub_step.result.status else 'skipped'}}-icon"></i>
+          </td>
+          <td>{{sub_step.start_time|format_datetime}}</td>
+          <td>{{sub_step.end_time|format_datetime}}</td>
+          <td>
+              {{sub_step.result.duration|get_duration if sub_step.result else '-'}}
+          </td>
+      </tr>
+
+        {% for _sub_step in sub_step.sub_steps %}
+            {% with step=_sub_step, step_index=step_index, internal_index=internal_index+1, loop_id=loop_id, extra_index=loop.index %}
+                {% include 'sub_steps_overview_template.html' %}
+            {% endwith %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+  <tr>
+      <td style="padding-left: {{internal_index}}em"><a href="#step-{{loop_id}}.{{step_index}}">{{loop_id}}.{{step_index}} - {{step.name}}</a></td>
+      <td class="text-center">
+          <i class="status-{{step.result.status if step.result is defined and step.result.status else 'skipped'}}-icon"></i>
+      </td>
+      <td>{{step.start_time|format_datetime}}</td>
+      <td>{{step.end_time|format_datetime}}</td>
+      <td>
+          {{step.result.duration|get_duration if step.result else '-'}}
+      </td>
+  </tr>
+{% endif %}

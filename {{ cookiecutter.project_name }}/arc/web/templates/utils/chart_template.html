@@ -1,0 +1,5 @@
+<canvas id="{{chart_id}}" width="250" height="250" class="chartjs-render-monitor"
+        style="display: block; width: {{ width }}px; height: {{ height }}px; max-height: {{ max_height }}px; max-width: {{ max_width }}px;" ></canvas>
+<script type="text/javascript">
+    create_chart("{{chart_id}}", {{labels|tojson}}, {{values|tojson}}, {{colors|tojson}}, "{{total_value}}");
+</script>

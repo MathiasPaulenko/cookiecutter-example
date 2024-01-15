@@ -1,0 +1,279 @@
+{% extends "base_template.html" %}
+{% block extra_head %}
+<!--FancyBox css -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css">
+<!-- Fancybox js -->
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h5><a href="feature_{{feature_name|get_short_name}}.html">{{_('Return to feature')}} {{feature_name}}</a>
+            </h5>
+        </div>
+    </div>
+    <div class="row results">
+        <div class="col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Steps')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                            {% with
+                                chart_id='steps_chart',
+                                labels=[_('Passed'), _('Failed'), _('Skipped')],
+                                values=[
+                                    scenario.steps_passed|d(0, true),
+                                    scenario.steps_failed|d(0, true),
+                                    scenario.steps_skipped|d(0, true),
+                                ],
+                                colors=[
+                                    "#21c576","#ed1919", "#7ca1e3"
+                                ],
+                                total_value=scenario.total_steps
+                            %}
+                                {% include "chart_template.html" %}
+                            {% endwith %}
+                        </div>
+                    <div class="row mt-3">
+                        <div class="col-md-3 offset-md-4">
+                            <p>{{_('Status')}}</p>
+                            <p>
+                                <i class="status-passed-icon"></i>
+                                {{_('Passed')}}
+                            </p>
+                            <p>
+                                <i class="status-failed-icon"></i>
+                                {{_('Failed')}}
+                            </p>
+                            <p>
+                                <i class="status-skipped-icon"></i>
+                                {{_('Skipped')}}
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{_('Progress')}}</p>
+                            <p>{{scenario.steps_passed_percent}} %</p>
+                            <p>{{scenario.steps_failed_percent}} %</p>
+                            <p>{{scenario.steps_skipped_percent}} %</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Run Info')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <td>{{_('Description')}}:</td>
+                                <td>{{scenario.description|join(" ")|d('-')}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Total Steps')}}:</td>
+                                <td>{{scenario.total_steps}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Passed Steps')}}:</td>
+                                <td>{{scenario.steps_passed}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Failed Steps')}}:</td>
+                                <td>{{scenario.steps_failed}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Skipped Steps')}}</td>
+                                <td>{{scenario.steps_skipped}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Execution start time')}}:</td>
+                                <td>{{scenario.start_time|format_datetime}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Execution end time')}}:</td>
+                                <td>{{scenario.end_time|format_datetime}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Duration')}}:</td>
+                                <td>{{scenario.duration|get_duration}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Environment')}}:</td>
+                                <td>{{global_data.environment}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Version')}}:</td>
+                                <td>{{global_data.version}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Application')}}:</td>
+                                <td>{{global_data.application}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Business area')}}:</td>
+                                <td>{{global_data.business_area}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Entity')}}:</td>
+                                <td>{{global_data.entity}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Executed by user')}}:</td>
+                                <td>{{global_data.user_code}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row overview">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Steps Overview')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>{{_('Step name')}}</th>
+                                <th>{{_('Status')}}</th>
+                                <th>{{_('Start')}}</th>
+                                <th>{{_('Finish')}}</th>
+                                <th>{{_('Duration')}}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for step in scenario.steps %}
+                                {% set step_index = loop.index %}
+                                <tr>
+                                    <td><a href="#step-{{step_index}}">{{step_index}} - {{step.name}}</a></td>
+                                    <td class="text-center">
+                                        <i class="status-{{step.result.status if step.result else 'skipped'}}-icon"></i>
+                                    </td>
+                                    <td>{{step.start_time|d(None)|format_datetime}}</td>
+                                    <td>{{step.end_time|d(None)|format_datetime}}</td>
+                                    <td>
+                                        {{step.result.duration|get_duration if step.result else '-'}}
+                                    </td>
+                                </tr>
+                                    {% if include_sub_steps_in_results and step.sub_steps|count > 0 %}
+                                        {% with step=step, step_index=step_index %}
+                                            {% include 'sub_steps_overview_template.html' %}
+                                        {% endwith %}
+                                    {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row tests-results">
+        <div class="col-md-12">
+            {% for step in scenario.steps %}
+                {% set step_index = loop.index %}
+                {% with step=step, is_sub_step=False, step_index=step_index, loop_id=none, include_sub_steps_in_results=include_sub_steps_in_results %}
+                    {% include 'step_body_template.html' %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<button class="btn-scrolltop" id="btn_scrolltop">
+    <i class="arrow-up"></i>
+</button>
+{% endblock %}
+
+{% block extra_js %}
+<!--Collapse Table -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+<!--Go up -->
+<script>
+    const btn_scrolltop = document.getElementById("btn_scrolltop")
+    btn_scrolltop.addEventListener('click', () => {
+        window.scrollTo(0, 0)
+    })
+
+    window.onscroll = () => {
+        add_btn_scrolltop()
+    }
+
+    const add_btn_scrolltop = () => {
+        if (window.scrollY < 300) {
+            btn_scrolltop.classList.remove("btn-scrolltop-on")
+        } else {
+            btn_scrolltop.classList.add("btn-scrolltop-on")
+        }
+    }
+
+</script>
+<!-- Collapses API -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".collapse-request").click(function (e) {
+            if ($(e.target).attr('aria-expanded') === "true") {
+                $(e.target).text("{{_('Hide request data')}}");
+            } else {
+                $(e.target).text("{{_('Show request data')}}");
+            }
+        });
+        $(".collapse-response").click(function (e) {
+            if ($(e.target).attr('aria-expanded') === "true") {
+                $(e.target).text("{{_('Hide response data')}}");
+            } else {
+                $(e.target).text("{{_('Show response data')}}");
+            }
+        });
+        $(".collapse-evidence-extra").click(function (e) {
+            if ($(e.target).attr('aria-expanded') === "true") {
+                $(e.target).text("{{_('Hide evidence extra json')}}");
+            } else {
+                $(e.target).text("{{_('Show evidence extra json')}}");
+            }
+        });
+        $(".collapse-info").click(function (e) {
+            if ($(e.target).attr('aria-expanded') === "true") {
+                $(e.target).text("{{_('Hide Api evidence info')}}");
+            } else {
+                $(e.target).text("{{_('Show Api evidence info')}}");
+            }
+        });
+        $(".collapse-unit-table").click(function (e) {
+            if ($(e.target).attr('aria-expanded') === "true") {
+                $(e.target).text("{{_('Hide info')}}");
+            } else {
+                $(e.target).text("{{_('Show info')}}");
+            }
+        });
+        $(".collapse-step-table").click(function (e) {
+            if ($(e.target).attr('aria-expanded') === "true") {
+                $(e.target).text("{{_('Hide step table data')}}");
+            } else {
+                $(e.target).text("{{_('Show step table data')}}");
+            }
+        });
+
+    });
+
+</script>
+<!-- Custom Fancybox js -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".img-thumbnail").each((index, element) => {
+            $(element).parent().attr("href", $(element).attr("src"))
+        });
+    });
+</script>
+{% endblock %}

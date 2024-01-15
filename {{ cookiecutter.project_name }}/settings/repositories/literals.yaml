@@ -1,0 +1,8 @@
+po_menu:
+  links:
+    price:
+      en: 'Price'
+      es: 'Precio'
+    dividends:
+      en: 'Dividends'
+      es: 'Dividendos'

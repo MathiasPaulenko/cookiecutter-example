@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block head %}
+{% endblock %}
+
+{% block main_content %}
+
+    <div id="card-home" class="card">
+        <div class="card-body">
+            <h4 class="card-title">{{ page_title }}</h4>
+            <div class="row mt-2 px-2" id>
+                <div class="col mx-1 mt-4" id="content_page">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <form id="edit_form" method="POST" action="{{ url_for('profiles.edit_profile') }}">
+        {{ edit_form.csrf_token }}
+        {{ edit_form.path_to_edit(size=40) }}
+        {{ edit_form.page_to_back(size=30) }}
+    </form>
+{% endblock %}
+
+{% block extra_js %}
+    <script defer src="{{ url_for('static', filename='js/manage_files.js') }}">
+    </script>
+    <script>
+        var environments = {{data.files | tojson}}
+        {% if data.file_root is defined%}
+            var root_name = String("{{data.file_root}}")
+        {%endif%}
+    </script>
+
+{% endblock %}

@@ -1,0 +1,358 @@
+{% if is_sub_step == false %}
+    {# If the step is a normal step then use the normal div with cards  #}
+    <div class="card">
+    <div class="card-header">
+        <h5 class="card-title" id="step-{{ loop_id|d(step_index, true) }}">
+            Step.{{ step_index }} - {{ step.keyword }} {{ step.name }}
+        </h5>
+    </div>
+    <div class="card-body">
+{% else %}
+    {# If the step is a sub step then us the collapsible div  #}
+    <div style="padding-left: 1em; padding-bottom: 1em" class="collapse"
+         id="sub_step_data_{{ loop_id|d(step_index, true) }}.{{ step_index }}">
+    <h5 id="step-{{ loop_id|d(step_index, true) }}.{{ step_index }}">
+        Step.{{ loop_id|d(step_index, true) }}.{{ step_index }} - {{ step.keyword }} {{ step.name }}
+    </h5>
+{% endif %}
+<div class="table-responsive step-data">
+    <table class="table">
+        <tr>
+            <td>{{ _('Status') }}:</td>
+            <td class="text-capitalize adjust-text-status-width">
+                {% if step.result is defined %}
+                    <status-{{ step.result.status }}>{{ step.result.status }}</status-{{ step.result.status }}>
+                {% else %}
+                    <status-skipped>skipped</status-skipped>
+                {% endif %}
+            </td>
+            <td class="font-header">
+                {{ _('Location') }}:
+            </td>
+            <td>
+                {{ step.location }}
+            </td>
+        </tr>
+        <tr>
+            <td>{{ _('Expected result') }}:</td>
+            <td>{{ step.result.expected_result if step.result else '-' }}</td>
+            <td class="font-header">{{ _('Obtained result') }}:</td>
+            <td>{{ step.result.obtained_result if step.result else '-' }}</td>
+        </tr>
+        <tr>
+            <td>{{ _('Duration') }}:</td>
+            <td>{{ step.result.duration|get_duration if step.result else '-' }}</td>
+            <td class="font-header">{{ _('Description') }}:</td>
+            <td>{{ step.text }}</td>
+        </tr>
+        <!-- get results -->
+        {% if step.result and step.result.error_message %}
+            <tr>
+                <td>{{ _('Result') }}:</td>
+                <td colspan="3">
+                    <pre>
+                        <code>
+                            {{ step.result.error_message|d('-') }}
+                        </code>
+                    </pre>
+                </td>
+            </tr>
+        {% endif %}
+        <!-- get results -->
+
+        <!-- additional text -->
+        {% if step.additional_text %}
+            <tr>
+                <td class="font-header">{{ _('Additional text') }}:</td>
+                <td colspan="3">
+                    {% for text in step.additional_text %}
+                        <p>{{ text }}</p>
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endif %}
+        <!-- additional text -->
+
+        <!-- additional html -->
+        {% if step.additional_html %}
+            {% set step_count = step_index %}
+            {% for evidence in step.additional_html %}
+                {% set evidence_count = loop.index %}
+                <table class="table">
+                    <tr>
+                        <td class="col-md-2">
+                            Additional html {{ evidence.title }}:
+                        </td>
+                        <td>
+                            <a class="collapse-unit-table collapsed" lang="EN-IN"
+                               href="#additional_html_{{ step_count }}_{{ evidence_count }}"
+                               data-bs-toggle="collapse"
+                               role="button"
+                               aria-expanded="false"
+                               aria-controls="additional_html_{{ step_count }}_{{ evidence_count }}">
+                                {{ _('Show info') }}
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+                <div class="collapse" id="additional_html_{{ step_count }}_{{ evidence_count }}">
+                    {% for key, value in evidence.items() %}
+                        {% if key != 'title' and value %}
+                            {{ value|safe }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <!-- additional html -->
+
+        <!-- step table -->
+        {% if step.table and step.result is defined %}
+            <td class="col-md-2">
+                {{ _('Step table') }}:
+            </td>
+            <td>
+                <a class="collapse-step-table collapsed" lang="EN-IN" href="#step_table_{{ step_index }}"
+                   data-bs-toggle="collapse" role="button"
+                   aria-expanded="false" aria-controls="step_table_{{ step_index }}">
+                    {{ _('Show step table data') }}
+                </a>
+            </td>
+            <tbody class="collapse" id="step_table_{{ step_index }}">
+            <tr>
+                {% for header in step.table.headings %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+            {% for row in step.table.rows %}
+                <tr>
+                {% for value in row %}
+                    <td>{{ value|replace_template_var }}</td>
+                {% endfor %}
+            {% endfor %}
+            </tr>
+            </tbody>
+        {% endif %}
+        <!-- step table -->
+
+        <!-- step screenshots -->
+        {% if step.screenshots %}
+            <tr>
+                <td></td>
+                <td class="screenshots-grid">
+                    {% for screenshot in step.screenshots %}
+                        <div class="thumbnail-container">
+                            <a href="" data-fancybox>
+                                <img class="img-thumbnail" src="{{ screenshot|transform_image_to_webp }}">
+                            </a>
+                        </div>
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endif %}
+        <!-- step screenshots -->
+    </table>
+    <!-- step api data -->
+    {% if step.request %}
+        <table class="table">
+            <tr>
+                <td class="col-md-2">{{ _('Request info') }}:</td>
+                <td>
+                    <a class="collapse-request collapsed" data-bs-toggle="collapse"
+                       href="#request_{{ loop_id|d(step_index, true) }}_{{ step_index }}" role="button"
+                       aria-expanded="false"
+                       aria-controls="request_{{ loop_id|d(step_index, true) }}_{{ step_index }}">
+                        {{ _('Show request data') }}
+                    </a>
+                </td>
+            </tr>
+        </table>
+        <div class="collapse" id="request_{{ loop_id|d(step_index, true) }}_{{ step_index }}">
+            <p>{{ _('Endpoint') }}: {{ step.request.url }}</p>
+            <p>{{ _('Params') }}:
+            <pre>{{ step.request.params|d(_('No params'))|jsonpretty }}</pre>
+            </p>
+            <p>{{ _('Headers') }}:
+            <pre>{{ step.request.headers|d(_('No headers'))|jsonpretty }}</pre>
+            </p>
+            <p>{{ _('Body') }}:
+            <pre>{{ step.request.body|d(_('No body')) }}</pre>
+            </p>
+        </div>
+
+        <table class="table">
+            <tr>
+                <td class="col-md-2">
+                    {{ _('Response info') }}:
+                </td>
+                <td>
+                    <a class="collapse-response collapsed" data-bs-toggle="collapse"
+                       href="#response_{{ loop_id|d(step_index, true) }}_{{ step_index }}" role="button"
+                       aria-expanded="false"
+                       aria-controls="response_{{ loop_id|d(step_index, true) }}_{{ step_index }}">
+                        {{ _('Show response data') }}
+                    </a>
+                </td>
+            </tr>
+        </table>
+        <div class="collapse" id="response_{{ loop_id|d(step_index, true) }}_{{ step_index }}">
+            <p>{{ _('Headers') }}:
+            <pre>{{ step.response_headers|d(_('No headers'))|parse_content_type }}</pre>
+            </p>
+            <p>{{ _('Body') }}:
+            <pre>{{ step.response_content|d(_('No content'))|parse_content_type }}</pre>
+            </p>
+        </div>
+    {% endif %}
+    <!-- step api data -->
+
+    <!-- jsons -->
+
+    {% if step.jsons %}
+        {% set evidence_count = step_index %}
+        {% for evidence in step.jsons %}
+
+            <table class="table">
+                <tr>
+                    <td class="col-md-2">{{ evidence.title }}:</td>
+                    <td>
+                        <a class="collapse-evidence-extra collapsed" data-bs-toggle="collapse"
+                           href="#evidence_extra_{{ loop_id|d(step_index, true) }}_{{evidence_count}}_{{ loop.index }}" role="button"
+                           aria-expanded="false"
+                           aria-controls="response_{{ loop_id|d(step_index, true) }}_{{evidence_count}}_{{ loop.index }}">
+                            {{ _('Show evidence extra info') }}
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <div class="collapse" id="evidence_extra_{{ loop_id|d(step_index, true) }}_{{evidence_count}}_{{ loop.index }}">
+                <pre>{{ evidence.content|parse_content_type }}</pre>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- jsons -->
+
+    <!-- unit tables -->
+    {% if step.unit_tables %}
+        {% set step_count = step_index %}
+        {% for evidence in step.unit_tables %}
+            {% set evidence_count = loop.index %}
+            <table class="table">
+                <tr>
+                    <td class="col-md-2">
+                        {{ evidence.title }}:
+                    </td>
+                    <td>
+                        <a class="collapse-unit-table collapsed" lang="EN-IN"
+                           href="#unit_table_{{ step_count }}_{{ loop_id|d(step_index, true) }}_{{ evidence_count }}"
+                           data-bs-toggle="collapse"
+                           role="button"
+                           aria-expanded="false"
+                           aria-controls="unit_table_{{ step_count }}_{{ loop_id|d(step_index, true) }}_{{ evidence_count }}">
+                            {{ _('Show info') }}
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <div class="collapse"
+                 id="unit_table_{{ step_count }}_{{ loop_id|d(step_index, true) }}_{{ evidence_count }}">
+                <table class="table">
+                    <tbody>
+                    {% for key, value in evidence.items() %}
+                        {% if key != 'title' and value %}
+                            <tr>
+                                <td class="col-md-2">{{ key|replace('_', ' ') }}:</td>
+                                <td>{{ value }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- unit tables -->
+
+    <!-- api info -->
+    {% if step.api_info %}
+        <table class="table">
+            <tr>
+                <td class="col-md-2">
+                    {{ _('Api evidence info') }}:
+                </td>
+                <td>
+                    <a class="collapse-info collapsed" lang="EN-IN"
+                       href="#api_info_{{ loop_id|d(step_index, true) }}_{{ step_index }}"
+                       data-bs-toggle="collapse" role="button"
+                       aria-expanded="false"
+                       aria-controls="api_info_{{ loop_id|d(step_index, true) }}_{{ step_index }}">
+                        {{ _('Show Api evidence info') }}
+                    </a>
+                </td>
+            </tr>
+        </table>
+        <div class="collapse" id="api_info_{{ loop_id|d(step_index, true) }}_{{ step_index }}">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td class="col-md-2">Url:</td>
+                    <td>{{ step.api_info.url }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-2">Method:</td>
+                    <td>{{ step.api_info.method }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-2">Reason:</td>
+                    <td>{{ step.api_info.reason }}</td>
+                </tr>
+                <tr>
+                    <td class="col-md-2">Status Code:</td>
+                    <td>{{ step.api_info.status_code }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    <!-- api info -->
+</div>
+{% if include_sub_steps_in_results and step.sub_steps|count > 0 %}
+    {#
+            If the step has sub steps then for loop each sub step, set the loop id,
+            create the 'a' tag with the anchor for the collapsable element and then render the body of the sub step.
+            If the sub step has a sub step, then repeat the process.
+
+            The first time loop_id is none but when it's a sub step then loop_id is equal to the loop id
+            of the parent step.
+
+        #}
+    <h4>{{ _('Sub steps') }}</h4>
+    {% if loop_id is none %}
+        {% set loop_id = step_index %}
+    {% else %}
+        {% set loop_id = loop_id|string + "." + step_index|string %}
+    {% endif %}
+    {% for sub_step in step.sub_steps %}
+        {% set _step_index = loop.index %}
+        <p>
+            <a id="step-{{ loop_id|d(step_index, true) }}.{{ _step_index }}" class="collapsed" lang="EN-IN"
+               href="#sub_step_data_{{ loop_id|d(step_index, true) }}.{{ _step_index }}" data-bs-toggle="collapse"
+               role="button" aria-expanded="false"
+               aria-controls="sub_step_data_{{ loop_id|d(step_index, true) }}.{{ _step_index }}">{{ loop_id|d(step_index, true) }}.{{ _step_index }}
+                - {{ sub_step['name'] }}
+            </a>
+        </p>
+        {% with step=sub_step, is_sub_step=True, step_index=_step_index, loop_id=loop_id, include_sub_steps_in_results=include_sub_steps_in_results %}
+            {% include 'step_body_template.html' %}
+        {% endwith %}
+    {% endfor %}
+{% endif %}
+{% if is_sub_step == false %}
+    {# This div close the normal div for the normal step  #}
+    </div>
+    </div>
+
+{% else %}
+    {# This div close the div for the sub step with collapsable #}
+    </div>
+{% endif %}

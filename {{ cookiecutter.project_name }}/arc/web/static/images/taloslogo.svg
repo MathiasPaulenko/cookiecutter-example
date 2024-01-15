@@ -1,0 +1,28 @@
+<svg id="Graphic_Elements" width="70" height="65" viewBox="380 230 780 500"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <defs>
+                    <style>.cls-1{fill:url(#linear-gradient-2);}.cls-2{letter-spacing:.14em;}.cls-3{filter:url(#outer-glow-4);}.cls-4{opacity:.5;}.cls-5{letter-spacing:.12em;}.cls-6,.cls-7{fill:#9bc3d3;}.cls-8{fill:url(#linear-gradient-6);}.cls-9{fill:url(#linear-gradient-5);}.cls-10{fill:url(#linear-gradient-3);}.cls-11{fill:url(#linear-gradient);}.cls-12{fill:#e21313;}.cls-7{font-family:SantanderHeadline-Bold, 'Santander Headline';font-size:100.65px;}.cls-13{fill:url(#linear-gradient-4);}</style>
+                    <linearGradient id="linear-gradient" x1="532.7" y1="342.75" x2="770.04" y2="753.84" gradientTransform="matrix(1, 0, 0, 1, 0, 0)" gradientUnits="userSpaceOnUse">
+                      <stop offset="0" stop-color="#c5f9f7"/>
+                      <stop offset="0.39" stop-color="#00c4de"/>
+                      <stop offset="1" stop-color="#333296"/>
+                    </linearGradient>
+                    <linearGradient id="linear-gradient-2" x1="506.9" y1="253.81" x2="703.82" y2="594.89" xlink:href="#linear-gradient"/>
+                    <linearGradient id="linear-gradient-3" x1="615.2" y1="444.64" x2="629.73" y2="469.8" xlink:href="#linear-gradient"/>
+                    <linearGradient id="linear-gradient-4" x1="642.94" y1="322.34" x2="657.47" y2="347.5" xlink:href="#linear-gradient"/>
+                    <linearGradient id="linear-gradient-5" x1="709.42" y1="390.8" x2="723.95" y2="415.96" xlink:href="#linear-gradient"/>
+                    <linearGradient id="linear-gradient-6" x1="442.11" y1="278.44" x2="650.1" y2="638.67" xlink:href="#linear-gradient"/>
+                  </defs>
+                  <g>
+                    <path class="cls-11" d="M813.34,428c-.56,32.28-8.49,62.78-22.2,89.9l-.05,.21v86.83c0,.26-.21,.48-.48,.48h-24.79c-6.43,0-11.65,5.22-11.65,11.65v100.51c0,.41-.49,.63-.8,.36l-101.14-90.69-.41-.11c-8.85,2.03-17.9,3.49-27.14,4.35-.41,.04-.58,.54-.27,.81l110.87,99.42h-4.2c-171.42,0-310.92-139.34-311.17-310.7,0-.26-.21-.47-.47-.47h-21.33c-.27,0-.48,.22-.48,.48,.26,183.65,149.75,332.98,333.46,332.98h38.4c.38,0,1.99-.94,2.9-1.66,2.79-2.24,4.13-5.85,4.13-9.43v-114.68c0-.26,.21-.48,.48-.48h24.79c6.43,0,11.65-5.22,11.65-11.65v-188.1h-.09Z" style="stroke: rgb(7, 7, 7); stroke-width: 7px;"/>
+                    <g class="cls-4">
+                      <path class="cls-1" d="M802.29,424.37c0-108.75-88.16-196.91-196.91-196.91s-196.91,88.16-196.91,196.91,88.16,196.91,196.91,196.91c2.2,0,4.38-.09,6.57-.17l-12.41-11.13-178.08-159.68c-1.19-8.48-1.85-17.13-1.85-25.94,0-1.88,.09-3.74,.14-5.6l30.45,27.31h137.17c4.73-14.87,18.67-25.68,35.09-25.68,20.3,0,36.82,16.52,36.82,36.82s-16.52,36.82-36.82,36.82c-16.42,0-30.35-10.81-35.09-25.68h-112.32l156.07,139.95,10.66,9.56c91.35-17.08,160.5-97.19,160.5-193.5Zm-85.6,15.83c-16.42,0-30.35-10.81-35.09-25.67H419.98c.4-7.55,1.21-15,2.49-22.29h105.8l39.62-63.23c2.03-3.25,5.6-5.23,9.44-5.23h37.79c4.73-14.87,18.67-25.68,35.09-25.68,20.3,0,36.82,16.52,36.82,36.82s-16.52,36.82-36.82,36.82c-16.42,0-30.35-10.81-35.09-25.67h-31.62l-28.93,46.17h127.03c4.73-14.87,18.67-25.68,35.09-25.68,20.3,0,36.82,16.52,36.82,36.82s-16.52,36.82-36.82,36.82Z" style="stroke-linecap: square; stroke: rgb(0, 0, 0); stroke-width: 9px;"/>
+                      <path class="cls-10" d="M622.47,471.75c8.01,0,14.53-6.52,14.53-14.54s-6.52-14.54-14.53-14.54-14.54,6.52-14.54,14.54,6.52,14.54,14.54,14.54Z"/>
+                      <path class="cls-13" d="M650.21,349.45c8.01,0,14.53-6.52,14.53-14.53s-6.52-14.54-14.53-14.54-14.54,6.52-14.54,14.54,6.52,14.53,14.54,14.53Z"/>
+                      <path class="cls-9" d="M716.68,388.85c-8.01,0-14.54,6.52-14.54,14.54s6.52,14.53,14.54,14.53,14.53-6.52,14.53-14.53-6.52-14.54-14.53-14.54Z"/>
+                    </g>
+                    <path class="cls-8" d="M419.9,754.23v-235.78c34.41,67.56,104.6,113.97,185.47,113.97,6.15,0,12.22-.32,18.23-.85l-24.08-21.59c-90.99-2.83-165.68-71.38-178.08-159.68-1.19-8.48-1.85-17.13-1.85-25.94,0-1.88,.09-3.74,.14-5.6,.04-1.42,.16-2.83,.23-4.24,.4-7.55,1.21-15,2.49-22.29,15.65-89.36,95.31-156.97,189.85-153.5,96.64,3.54,175.12,82,178.69,178.64,3.58,96.8-67.36,178.05-159.89,190.94l20.93,18.77c60.81-14,111.5-54.7,139.03-109.08,13.74-27.15,21.7-57.68,22.25-90,.02-1.21,.09-2.41,.09-3.63,0-114.72-93.33-208.05-208.05-208.05s-208.05,93.33-208.05,208.05c0,3.69,.1,7.35,.29,10.99v318.88" style="paint-order: stroke markers; stroke: rgb(0, 0, 0); stroke-width: 16px;"/>
+                  </g>
+                  <text class="cls-6" style="font-family: SantanderHeadline-Bold, &quot;Santander Headline&quot;; font-size: 100.7px; line-height: 161.04px; stroke: rgb(16, 16, 15); stroke-width: 3px; white-space: pre;" x="12.872"><tspan x="902.476" y="727.099" style="letter-spacing: 12.08px; font-size: 100.7px; word-spacing: 0px;">L</tspan><tspan x="960.146" y="727.099" style="letter-spacing: 14.09px; font-size: 100.7px; word-spacing: 0px;">OS</tspan></text>
+                  <polygon class="cls-13" points="816.979 670.244 825.299 654.814 842.169 654.814 851.929 654.814 859.289 654.814 854.899 654.814 892.709 654.814 884.369 670.244 866.709 670.244 861.629 670.244 855.609 682.754 834.429 726.814 817.299 726.814 844.519 670.244 816.979 670.244" style="fill: rgb(226, 19, 19); stroke: rgb(9, 9, 8); stroke-width: 3px;"/>
+                  <polygon class="cls-5" points="885.489 727.693 868.379 727.693 854.599 699.063 863.219 681.393 885.489 727.693" style="fill: rgb(155, 195, 211); letter-spacing: normal; stroke: rgb(0, 0, 0); stroke-width: 3px;"/>
+                </svg>

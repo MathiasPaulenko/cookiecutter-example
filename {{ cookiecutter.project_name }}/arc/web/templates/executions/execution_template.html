@@ -1,0 +1,296 @@
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h4 class="card-title">Features</h4>
+                <hr>
+                {% with
+                chart_id='features_chart',
+                labels=['Passed', 'Failed'],
+                values=[
+                execution.features_passed,
+                execution.features_failed,
+                ],
+                colors=[
+                "#21c576","#ed1919"
+                ],
+                total_value=execution.total_features,
+                width = 792,
+                height = 200,
+                max_width = 792,
+                max_height = 200
+                %}
+                {% include "utils/chart_template.html" %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Execution data</h4>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Application:</th>
+                            <td>{{execution.application}}</td>
+                        </tr>
+                        <tr>
+                            <th>User code:</th>
+                            <td>{{execution.user_code}}</td>
+                        </tr>
+                        <tr>
+                            <th>Business area:</th>
+                            <td>{{execution.business_area}}</td>
+                        </tr>
+                        <tr>
+                            <th>Entity:</th>
+                            <td>{{execution.entity}}</td>
+                        </tr>
+                        <tr>
+                            <th>Environment:</th>
+                            <td>{{execution.environment}}</td>
+                        </tr>
+                        <tr>
+                            <th>Talos version:</th>
+                            <td>{{execution.version}}</td>
+                        </tr>
+                        <tr>
+                            <th>Start time:</th>
+                            <td>{{execution.start_time|format_datetime}}</td>
+                        </tr>
+                        <tr>
+                            <th>End time:</th>
+                            <td>{{execution.end_time|format_datetime}}</td>
+                        </tr>
+                        <tr>
+                            <th>Duration:</th>
+                            {% set args = [execution.end_time, execution.start_time] %}
+                            <td>{{args|get_duration_from_timestamps}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Scenarios</h4>
+                <hr>
+                {% with
+                chart_id='scenarios_chart',
+                labels=['Passed', 'Failed'],
+                values=[
+                execution.passed_scenarios,
+                execution.failed_scenarios,
+                ],
+                colors=[
+                "#21c576","#ed1919"
+                ],
+                total_value=execution.total_scenarios,
+                width = 792,
+                height = 200,
+                max_width = 792,
+                max_height = 200
+                %}
+                {% include "utils/chart_template.html" %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Steps</h4>
+                <hr>
+                {% with
+                chart_id='steps_chart',
+                labels=['Passed', 'Failed', 'Skipped'],
+                values=[
+                execution.steps_passed,
+                execution.steps_failed,
+                execution.steps_skipped,
+                ],
+                colors=[
+                "#21c576","#ed1919","#7ca1e3"
+                ],
+                total_value=execution.total_steps,
+                width = 792,
+                height = 200,
+                max_width = 792,
+                max_height = 200
+                %}
+                {% include "utils/chart_template.html" %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Execution Features</h4>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>
+                                Feature name
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                OS
+                            </th>
+                            <th>
+                                Driver
+                            </th>
+                            <th>
+                                Total Scenarios
+                            </th>
+                            <th>
+                                Scenarios passed
+                            </th>
+                            <th>
+                                Scenarios failed
+                            </th>
+                            <th>
+                                Total Steps
+                            </th>
+                            <th>
+                                Steps Passed
+                            </th>
+                            <th>
+                                Steps Failed
+                            </th>
+                            <th>
+                                Steps Skipped
+                            </th>
+                            <th>
+                                Start time
+                            </th>
+                            <th>
+                                End time
+                            </th>
+                            <th>
+                                Duration
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for feature in execution.features %}
+                        <tr>
+                            <td>
+                                {{feature.name}}
+                            </td>
+                            <td class="text-center">
+                                {% if feature.status.value == 1 %}
+                                    <i class="status-passed-icon"></i>
+                                {% elif feature.status.value == 2 %}
+                                    <i class="status-failed-icon"></i>
+                                {% endif %}
+                            </td>
+                            <td>{{feature.os}}</td>
+                            <td>{{feature.driver}}</td>
+                            <td>{{feature.total_scenarios}}</td>
+                            <td>{{feature.passed_scenarios}}</td>
+                            <td>{{feature.failed_scenarios}}</td>
+                            <td>{{feature.total_steps}}</td>
+                            <td>{{feature.steps_passed}}</td>
+                            <td>{{feature.steps_failed}}</td>
+                            <td>{{feature.steps_skipped}}</td>
+                            <td>{{feature.start_time|format_datetime}}</td>
+                            <td>{{feature.end_time|format_datetime}}</td>
+                            <td>{{feature.duration|get_duration}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Execution Scenarios</h4>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>
+                                Feature name
+                            </th>
+                            <th>
+                                Scenario name
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Total Steps
+                            </th>
+                            <th>
+                                Steps Passed
+                            </th>
+                            <th>
+                                Steps Failed
+                            </th>
+                            <th>
+                                Steps Skipped
+                            </th>
+                            <th>
+                                Start time
+                            </th>
+                            <th>
+                                End time
+                            </th>
+                            <th>
+                                Duration
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for feature in execution.features %}
+                            {% for scenario in feature.scenarios %}
+                                <tr>
+                                    <td>
+                                        {{feature.name}}
+                                    </td>
+                                    <td>
+                                        {{scenario.name}}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if scenario.status.value == 1 %}
+                                            <i class="status-passed-icon"></i>
+                                        {% elif scenario.status.value == 2 %}
+                                            <i class="status-failed-icon"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{scenario.total_steps}}</td>
+                                    <td>{{scenario.steps_passed}}</td>
+                                    <td>{{scenario.steps_failed}}</td>
+                                    <td>{{scenario.steps_skipped}}</td>
+                                    <td>{{scenario.start_time|format_datetime}}</td>
+                                    <td>{{scenario.end_time|format_datetime}}</td>
+                                    <td>{{scenario.duration|get_duration}}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

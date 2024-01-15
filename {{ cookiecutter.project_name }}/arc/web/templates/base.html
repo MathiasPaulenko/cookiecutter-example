@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+          crossorigin="anonymous"
+    >
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+    <script src="
+    https://cdn.jsdelivr.net/npm/ace-builds@1.24.1/src-min-noconflict/ace.min.js
+    "></script>
+    <link href="
+    https://cdn.jsdelivr.net/npm/ace-builds@1.24.1/css/ace.min.css
+    " rel="stylesheet">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/alerts.js') }}"></script>
+    {% block head %}
+
+    {% endblock %}
+</head>
+<body id="body-pd" class="{% if session.dark_mode %}dark-mode{% endif %}">
+{% block navbar %}
+    <!-- navbar -->
+    <header id="header-navbar" class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row shadow sidebar-mobile mb-3">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+            <a href="/" id="headerLogo">
+                <img alt="Talos BDD" src="{{ url_for('static', filename='images/taloslogo.png') }}"
+                     class="d-inline-block align-text-middle">
+            </a>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+            <div class="input-group d-none" id="search_container">
+                <label class="input-group-text border-0 bg-white" for="search">
+                    <i class="bi bi-search"></i>
+                </label>
+                <input class="form-control border-0 fw-bold" type="text" id="search" name="search"
+                       placeholder="Search steps, features, scenarios, etc" aria-label="Search">
+            </div>
+            <button class="navbar-toggler position-relative d-md-none ms-auto collapsed" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </header>
+
+{% endblock %}
+
+{% macro render_field(field) %}
+    <div class="row mb-3">
+        <div class="col-sm-2">
+            {% if field.flags.required %}
+                {{ field.label(class_="col-form-label required") }}
+            {% else %}
+                {{ field.label(class_="col-form-label") }}
+            {% endif %}
+        </div>
+        <div class="col-sm-8">
+            {% if field.type == 'BooleanField' %}
+                <div class="mb-3 form-group form-check form-switch">
+                    {{ field(class_="form-check-input") }}
+                </div>
+            {% elif field.type == 'SelectField' %}
+                <div class="mb-3 form-group">
+                    {{ field(class_="form-select") }}
+                </div>
+            {% else %}
+                <div class="mb-3 form-group">
+                    {{ field(class_="form-control") }}
+                </div>
+            {% endif %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+<div class="container-fluid" id="content-wrapper">
+    <div class="row">
+        <!--  Include sidebar      -->
+        {% include "sidebar.html" %}
+        <main id="mainContent" class="col-lg-10">
+            <div class="main_content">
+                {% if parsing_errors %}
+                    <div class="alert alert-warning">
+                        Errors occured during the features parsing:
+                        <ul>
+                          {% for error in parsing_errors %}
+                                <li>{{ error }}</li>
+                          {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                        <script>
+                            showNotification('{{message}}', '', '{{category}}', 5000, '', false, true, 'top-end');
+                        </script>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+                {% block main_content %}
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title">
+                                {{ page_title }}
+                            </p>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Header</th>
+                                        <th scope="col">Header</th>
+                                        <th scope="col">Header</th>
+                                        <th scope="col">Header</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>1,001</td>
+                                        <td>random</td>
+                                        <td>data</td>
+                                        <td>placeholder</td>
+                                        <td>text</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,002</td>
+                                        <td>placeholder</td>
+                                        <td>irrelevant</td>
+                                        <td>visual</td>
+                                        <td>layout</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,003</td>
+                                        <td>data</td>
+                                        <td>rich</td>
+                                        <td>dashboard</td>
+                                        <td>tabular</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,003</td>
+                                        <td>information</td>
+                                        <td>placeholder</td>
+                                        <td>illustrative</td>
+                                        <td>data</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,004</td>
+                                        <td>text</td>
+                                        <td>random</td>
+                                        <td>layout</td>
+                                        <td>dashboard</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,005</td>
+                                        <td>dashboard</td>
+                                        <td>irrelevant</td>
+                                        <td>text</td>
+                                        <td>placeholder</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,006</td>
+                                        <td>dashboard</td>
+                                        <td>illustrative</td>
+                                        <td>rich</td>
+                                        <td>data</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,007</td>
+                                        <td>placeholder</td>
+                                        <td>tabular</td>
+                                        <td>information</td>
+                                        <td>irrelevant</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,008</td>
+                                        <td>random</td>
+                                        <td>data</td>
+                                        <td>placeholder</td>
+                                        <td>text</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,009</td>
+                                        <td>placeholder</td>
+                                        <td>irrelevant</td>
+                                        <td>visual</td>
+                                        <td>layout</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,010</td>
+                                        <td>data</td>
+                                        <td>rich</td>
+                                        <td>dashboard</td>
+                                        <td>tabular</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,011</td>
+                                        <td>information</td>
+                                        <td>placeholder</td>
+                                        <td>illustrative</td>
+                                        <td>data</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,012</td>
+                                        <td>text</td>
+                                        <td>placeholder</td>
+                                        <td>layout</td>
+                                        <td>dashboard</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,013</td>
+                                        <td>dashboard</td>
+                                        <td>irrelevant</td>
+                                        <td>text</td>
+                                        <td>visual</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,014</td>
+                                        <td>dashboard</td>
+                                        <td>illustrative</td>
+                                        <td>rich</td>
+                                        <td>data</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,015</td>
+                                        <td>random</td>
+                                        <td>tabular</td>
+                                        <td>information</td>
+                                        <td>text</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous">
+</script>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        function fetchAlerts() {
+            fetch('/get_alerts')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "False"){
+                        $('#abortExecution').addClass("disabled");
+                        clearInterval(setIntervalIdAlerts)
+                    }
+                    let new_alert = ""
+                    showNotification(data.messages, '', 'error', 5000, '', false, true, "top-end");
+                    new_alert = null
+                    data = null
+                })
+                .catch(error => console.error('Error fetching alerts:', error));
+        }
+        fetchAlerts();
+        const setIntervalIdAlerts = setInterval(fetchAlerts, 5000);
+    </script>
+    <script>
+        function fetchInfo() {
+            fetch('/get_infos')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "False"){
+                        $('#abortExecution').addClass("disabled");
+                        clearInterval(setIntervalIdInfo)
+                    }
+                    let new_alert = ""
+                    showNotification(data.messages, '', 'info', 5000, '', false, true, "top-end");
+                    new_alert = null
+                    data = null
+                })
+                .catch(error => console.error('Error fetching info:', error));
+        }
+        fetchInfo();
+        const setIntervalIdInfo = setInterval(fetchInfo, 5000);
+    </script>
+</body>
+{% block extra_js %}
+    <!-- Add here your extra js scripts-->
+{% endblock %}
+</html>

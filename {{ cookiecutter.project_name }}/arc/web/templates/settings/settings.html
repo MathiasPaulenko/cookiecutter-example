@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block head %}
+    <!--
+    Add your custom scripts here.
+    By example:
+    <script async type="text/javascript" src="/static/js/home_functions.js"></script>
+    -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/delete_settings.js') }}"></script>
+{% endblock %}
+
+{% block main_content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Settings</li>
+            <li class="breadcrumb-item active" aria-current="page">Talos Settings</li>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Settings</h4>
+                    <a class="btn btn-primary" href="{{ url_for('.new_settings') }}">Add settings</a>
+                    <hr>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>#ID</th>
+                                <th>Name</th>
+                                <th>Default</th>
+                                <th>Creation date</th>
+                                <th>Last update date</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for setting in _settings %}
+                                <tr>
+                                    <td>{{ setting.id }}</td>
+                                    <td>{{ setting.name }}</td>
+                                    <td>{% if setting.active == true %}Yes{% else %}No{% endif %}</td>
+                                    <td>{{ setting.created_on }}</td>
+                                    <td>{{ setting.updated_on }}</td>
+                                    <td colspan="2">
+                                        <a title="Edit"
+                                           href="{{ url_for('.edit_settings', settings_id=setting.id) }}"><i
+                                                class="bi bi-pen"></i></a>
+                                        <a title="Delete" data-bs-toggle="modal" data-bs-target="#deleteSettingModal"
+                                           data-bs-setting-name="{{ setting.name }}"
+                                           data-bs-setting-id="{{ setting.id }}" href="#"><i class="bi bi-trash"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <span>Total settings: {{ _settings.total }}</span>
+                        {% if _settings.total == 0 %}
+                            <h4 class="text-center">No settings data found</h4>
+                        {% endif %}
+                    </div>
+                    <nav aria-label="navigation">
+                        <ul class="pagination">
+                            {% for page in _settings.iter_pages() %}
+                                <li class="page-item">
+                                    {% if page %}
+                                        {% if page != _settings.page %}
+                                            <a class="page-link"
+                                               href="{{ url_for('.settings', page=page) }}">{{ page }}</a>
+                                        {% else %}
+                                            <strong class="page-link active">{{ page }}</strong>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="page-link" class="ellipsis">…</span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteSettingModal" tabindex="-1" aria-labelledby="deleteSettingModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteSettingModalLabel">Delete setting with name </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-body-confirmation">Please, confirm you want to delete the setting configuration with name </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteSettingForm" method="POST" action="/settings/delete/">
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

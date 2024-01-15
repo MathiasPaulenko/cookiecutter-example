@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="/static/css/autcomplete_input.css">
+{% endblock %}
+
+{% block main_content %}
+    <div id="card-home" class="card">
+        <div class="card-body">
+            <h4 class="card-title">{{ page_title }}</h4>
+            <form action="{{ url_for('run_custom_executions.run_custom_execution') }}" id="custom_execution_form" method="post" autocomplete="off">
+                {{ form.csrf_token }}
+                {{ form.tags }}
+                {{ form.id }}
+                {{ form.save_execution }}
+                {{ render_field(form.name) }}
+                {{ render_field(form.conf_properties) }}
+                {{ render_field(form.headless) }}
+                {{ render_field(form.environment) }}
+                {{ render_field(form.extra_arguments) }}
+
+                <div class="autocomplete">
+                    <div id="tag_search_div">
+                        <div class="row mb-3">
+                            <div class="col-sm-2">
+                                <label for="tag_input" class="col-form-label required">Type tag to run</label><br>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">@</span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Example_tag_1"
+                                           aria-label="Example" aria-describedby="basic-addon1" id="tag_input">
+                                    <button type="button" id="btnAddTag" class="btn btn-outline-primary"> Add Tag</button>
+                                </div>
+                            </div>
+                        </div>
+                        <span id="message_errors" class="text-danger ms-5 my-2"></span>
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-2">
+                        <label for="tag_input" class="col-form-label">Selected tags</label>
+                    </div>
+                    <div class="col-8">
+                        <div id="tags_added" class="bg-light w-100 border border-1 p-2 text-wrap"
+                             style="min-height: 8vh;"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary mb-2 py-1" type="button" id="runButton" name="run_custom">Run
+                        </button>
+                        <button class="btn btn-primary mb-2 py-1" type="button" id="saveExecution">Save execution</button>
+                    </div>
+                </div>
+            </form>
+            <hr>
+            <div class="groups_table">
+                <h4 class="card-title">
+                    Saved Custom Executions
+                </h4>
+                <table id="features-table" class="table table-hover table-striped" aria-labelledby="groups table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Tags</th>
+                        <th scope="col">Conf Properties</th>
+                        <th scope="col">Environment</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for execution in executions %}
+                        <tr>
+                            <td>{{ execution.name }}</td>
+                            <td>{{ execution.tags }}</td>
+                            <td>{{ execution.conf_properties }}</td>
+                            <td>{{ execution.environment }}</td>
+                            <td>
+                                <button
+                                        class="btn btn-sm btn-outline-primary select_custom_execution"
+                                        title="Load execution"
+                                        data-custom-execution-id="{{ execution.id }}">
+                                    <i class="bi bi-arrow-bar-up"></i>
+                                </button>
+                                <a
+                                        data-bs-toggle="modal" data-bs-target="#deleteCustomExecution"
+                                        class="btn btn-sm btn-outline-primary delete_custom_execution" title="Delete custom execution"
+                                        data-custom-execution-id="{{ execution.id }}"
+                                        data-custom-execution-name="{{ execution.name }}">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    {% if executions|length == 0 %}
+                        <td colspan="5" class="text-center">
+                            <span class="h4 text-body-tertiary">No custom executions available.</span>
+                        </td>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteCustomExecution" tabindex="-1" aria-labelledby="deleteCustomExecutionLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteCustomExecution">Delete setting with name </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-body-confirmation">Please, confirm you want to delete the custom execution configuration with name </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteSettingForm" method="POST" action="/custom_execution/delete/">
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/run.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/autocomplete_tags.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom_execution.js') }}"></script>
+    <script>
+        set_tags({{tags| tojson}})
+        pid = {{ pid }}
+        portal_running = '{{portal_running}}'
+    </script>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% macro render_field(field, section, input_name) %}
+    <div class="row mb-3">
+        <div class="col-sm-2">
+            {% if section != 'Driver' %}
+                <i title="Remove {{ field.label.text }}" data-remove-section="{{ section }}"
+               data-remove-option="{{ input_name }}" class="bi bi-x-square remove-option"></i>
+            {% elif input_name != 'type' %}
+                <i title="Remove {{ field.label.text }}" data-remove-section="{{ section }}"
+               data-remove-option="{{ input_name }}" class="bi bi-x-square remove-option"></i>
+            {% endif %}
+            {{ field.label(class_="col-form-label") }}
+        </div>
+        <div class="col-sm-8">
+            {% if field.type == 'BooleanField' %}
+            <div class="mb-3 form-group form-check form-switch">
+                {{ field(class_="form-check-input") }}
+            </div>
+            {% elif field.type == 'SelectField' %}
+                <div class="mb-3 form-group">
+                    {{ field(class_="form-select") }}
+                </div>
+            {% else %}
+                <div class="mb-3 form-group">
+                    {{ field(class_="form-control") }}
+                </div>
+            {% endif %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+<form class="settings_form" autocomplete="off" method="POST"
+      action="{{ url }}">
+    {{ form.csrf_token }}
+    {{ form.custom_sections_inputs }}
+    {{ form.remove_sections_inputs }}
+    {% for section in sections %}
+        <div data-section="{{ section }}">
+            <h4>
+                <a data-bs-toggle="collapse" href="#{{ section }}" role="button" aria-expanded="false"
+                aria-controls="{{ section }}">{{ section }}
+                </a>
+                {% if section != 'Driver'%}
+                    <i data-remove-section="{{ section }}" class="bi bi-x-square float-end remove-section"></i>
+                {% endif %}
+            </h4>
+            <hr>
+            <div class="collapse" id="{{ section }}">
+                {% for key in section_values[section] %}
+                    {% set form_input_name = section+'_'+key %}
+                    {{ render_field(form.__dict__[form_input_name], section, key) }}
+                {% endfor %}
+                <div class="mb-3">
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="{{ section }}_custom_new_option">New option name</label>
+                        <div class="col-sm-8">
+                            <div class="mb-3 form-group">
+                                <input placeholder="Option name for section '{{ section }}'" class="form-control" id="{{ section }}_custom_new_option" name="{{ section }}_custom_new_option" type="text" value="">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-secondary input_button">Add input</button>
+                            <button type="button" class="btn btn-secondary checkbox_button">Add checkbox</button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+    {% endfor %}
+    <div id="add_new_section">
+        <h4>Add new section</h4>
+        <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="custom_new_section">New section name</label>
+            <div class="col-sm-8">
+                <div class="mb-3 form-group">
+                    <input placeholder="New section name" class="form-control" id="custom_new_section" name="custom_new_section" type="text" value="">
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <button id="add_section_button" type="button" class="btn btn-secondary">Add Section</button>
+            </div>
+        </div>
+    </div>
+    <input class="btn btn-primary" type="submit" value="Save">
+</form>

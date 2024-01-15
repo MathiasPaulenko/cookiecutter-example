@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block head %}
+<!--
+Add your custom scripts here.
+By example:
+<script async type="text/javascript" src="/static/js/home_functions.js"></script>
+-->
+{% endblock %}
+
+
+{% block main_content %}
+<div class="card">
+    <div class="card-body">
+        <h1 class="card-title">{{page_title}}</h1>
+        <span>Total executions: {{ executions.total }}</span>
+        <hr>
+        <form id="filterForm" action="" method="GET" class="table-responsive">
+            <div>
+                <div style="display: flex; margin-bottom: 15px">
+                    <div style="margin-right: 20px">
+                        {{ form.order.label(class_="col-form-label") }}
+                    </div>
+                    <div style="margin-right: 20px">
+                        {{ form.order(class_="form-select") }}
+                    </div>
+                    <div style="margin-right: 20px">
+                        {{ form.status.label(class_="col-form-label") }}
+                    </div>
+                    <div style="margin-right: 20px">
+                        {{ form.status(class_="form-select") }}
+                    </div>
+                    <label style="margin-right: 20px" class="col-form-label">ID:</label>
+                    <div style="margin-right: 20px">
+                        {{ form.id_from.label(class_="col-form-label") }}
+                    </div>
+                    <div style="margin-right: 20px">
+                        {{ form.id_from(class_="form-control") }}
+                    </div>
+                    <div style="margin-right: 20px">
+                        {{ form.id_to.label(class_="col-form-label") }}
+                    </div>
+                    <div style="margin-right: 20px">
+                        {{ form.id_to(class_="form-control") }}
+                    </div>
+                    <div style="margin-right: 20px">
+                        {{ form.environment.label(class_="col-form-label") }}
+                    </div>
+                    <div style="margin-right: 100px">
+                        {{ form.environment(class_="form-select") }}
+                    </div>
+                    <input style="margin-right: 20px" id="search_btn" class="btn btn-primary mb-2 py-1" type="submit" value="Search">
+                    <input id="cleanFilters" class="btn btn-primary mb-2 py-1" type="button" value="Clean Filters">
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-sm table-hover" id="executions_table">
+                <thead class="thead-dark">
+                <tr>
+                    <th>#ID</th>
+                    <th>Status</th>
+                    <th>Total features</th>
+                    <th>Features passed</th>
+                    <th>Features failed</th>
+                    <th>Total scenarios</th>
+                    <th>Scenarios passed</th>
+                    <th>Scenarios failed</th>
+                    <th>Total steps</th>
+                    <th>Steps passed</th>
+                    <th>Steps failed</th>
+                    <th>Steps skipped</th>
+                    <th>Environment</th>
+                    <th>Version</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Duration</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for execution in executions %}
+                <tr>
+                    <td>{{execution.id}}</td>
+                    <td>
+                        {% if execution.features_failed > 0 %}
+                            <i class="status-failed-icon"></i>
+                        {% else %}
+                            <i class="status-passed-icon"></i>
+                        {% endif %}
+                    </td>
+                    <td>{{execution.total_features}}</td>
+                    <td>{{execution.features_passed}}</td>
+                    <td>{{execution.features_failed}}</td>
+                    <td>{{execution.total_scenarios}}</td>
+                    <td>{{execution.passed_scenarios}}</td>
+                    <td>{{execution.failed_scenarios}}</td>
+                    <td>{{execution.total_steps}}</td>
+                    <td>{{execution.steps_passed}}</td>
+                    <td>{{execution.steps_failed}}</td>
+                    <td>{{execution.steps_skipped}}</td>
+                    <td>{{execution.environment}}</td>
+                    <td>{{execution.version}}</td>
+                    {% set args = [execution.start_time, 'Date'] %}
+                    <td>{{args|format_date_or_time}}</td>
+                    {% set args = [execution.start_time, 'Time'] %}
+                    <td>{{args|format_date_or_time}}</td>
+                    {% set args = [execution.end_time, execution.start_time] %}
+                    <td>{{args|get_duration_from_timestamps}}</td>
+                    <td><a href="/execution/{{execution.id}}/"><i class="bi bi-eye"></i></a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% if executions.total == 0 %}
+                <h4 class="text-center">No executions data found</h4>
+            {% endif %}
+        </div>
+        <nav aria-label="navigation">
+            <ul class="pagination">
+                {% for page in executions.iter_pages() %}
+                <li class="page-item">
+                    {% if page %}
+                        {% if page != executions.page %}
+                            <a class="page-link" href="{{ url_for('executions.executions', page=page, **args) }}">{{ page }}</a>
+                        {% else %}
+                            <strong class="page-link active">{{ page }}</strong>
+                        {% endif %}
+                    {% else %}
+                        <span class="page-link ellipsis">…</span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+    <script>
+        document.getElementById("filterForm").style.display = "block";
+        document.getElementById("cleanFilters").addEventListener("click", function() {
+            location.href = location.href.split("/").slice(0, -1).join("/");
+        });
+    </script>
+
+{% endblock %}
+

@@ -1,0 +1,8 @@
+{% if button_enabled %}
+    <button class="btn btn-outline-success" onclick="showNotification('{{title}}', '{{text}}', '{{icon}}', '{{timer}}', '{{buttonNotificationMessage}}', {{showConfirmButton|tojson}}, {{timerProgressBar|tojson}}, '{{position}}')">
+        {{buttonPopUpMessage}}</button>
+{% else %}
+    <script>
+      showNotification('{{title}}', '{{text}}', '{{icon}}', '{{timer}}', '{{buttonNotificationMessage}}', {{showConfirmButton|tojson}}, {{timerProgressBar|tojson}}, '{{position}}')
+    </script>
+{% endif %}

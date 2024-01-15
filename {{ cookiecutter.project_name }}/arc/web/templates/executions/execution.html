@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block head %}
+<!--
+Add your custom scripts here.
+By example:
+<script async type="text/javascript" src="/static/js/home_functions.js"></script>
+-->
+<script type="text/javascript" src="/static/js/create_chart.js"></script>
+{% endblock %}
+
+{% block main_content %}
+<h1>{{page_title}}</h1>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{url_for('executions.executions')}}">Executions</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Execution #{{execution.id}}</li>
+  </ol>
+</nav>
+{% include "executions/execution_template.html" %}
+</div>
+{% endblock %}
+

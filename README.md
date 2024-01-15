@@ -1,1 +1,1 @@
-# cookiecutter-example
+# CookieCutter TalosBDD example

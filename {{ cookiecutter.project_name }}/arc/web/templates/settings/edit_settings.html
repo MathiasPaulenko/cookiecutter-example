@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit setting{% endblock %}
+
+{% block head %}
+    <!--
+    Add your custom scripts here.
+    By example:
+    <script async type="text/javascript" src="/static/js/home_functions.js"></script>
+    -->
+{% endblock %}
+
+{% block main_content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('.settings') }}">Settings</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Setting #{{ _settings.id }}
+                - {{ _settings.name }}</li>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Settings Info</h4>
+                    {% with url=url_for('.edit_settings', settings_id=_settings.id) %}
+                        {% include 'settings/settings_form.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

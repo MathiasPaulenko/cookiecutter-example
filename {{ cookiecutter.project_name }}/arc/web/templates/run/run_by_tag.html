@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="/static/css/autcomplete_input.css">
+{% endblock %}
+
+{% block main_content %}
+    <div id="card-home" class="card">
+        <div class="card-body">
+            <h4 class="card-title">{{ page_title }}</h4>
+            <div class="autocomplete">
+                <div id="tag_search_div">
+                    <div class="row mb-3">
+                        <div class="col-sm-2">
+                            <label for="tag_input" class="col-form-label required">Type tag to run</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">@</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Example_tag_1"
+                                       aria-label="Example" aria-describedby="basic-addon1" id="tag_input">
+                                <button id="btnAddTag" class="btn btn-outline-primary"> Add Tag</button>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="message_errors" class="text-danger ms-5 my-2"></span>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <div class="row my-4">
+                    <div class="col-2">
+                        <label for="tag_input" class="col-form-label">Selected tags</label>
+                    </div>
+                    <div class="col-8">
+                        <div id="tags_added" class="bg-light w-100 border border-1 p-2 text-wrap"
+                             style="min-height: 8vh;"></div>
+                    </div>
+                </div>
+                <form id="run_form" method="POST" action="{{ url_for('run_tags.run_by_tag') }}">
+                    {{ form.csrf_token }}
+                    {{ form.tags() }}
+                    {{ render_field(form.conf_properties) }}
+                </form>
+                <div class="col">
+                    <button class="btn btn-primary mb-2 py-1" id="runButton">Run</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/run.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/run_by_tag.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/autocomplete_tags.js') }}"></script>
+    <script>
+        set_tags({{tags| tojson}})
+        pid = {{ pid }}
+        portal_running = '{{portal_running}}'
+    </script>
+{% endblock %}

@@ -1,0 +1,154 @@
+{% macro render_field(field) %}
+    <div class="row mb-3">
+        {% if field.flags.required %}
+            {{ field.label(class_="col-sm-2 col-form-label required") }}
+        {% else %}
+            {{ field.label(class_="col-sm-2 col-form-label") }}
+        {% endif %}
+        <div class="col-sm-10">
+            {% if field.type == 'BooleanField' %}
+                <div class="mb-3 form-group form-check form-switch">
+                    {{ field(class_="form-check-input") }}
+                </div>
+            {% else %}
+                <div class="mb-3 form-group">
+                    {{ field(class_="form-control") }}
+                </div>
+            {% endif %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+<form class="settings_form" autocomplete="off" method="POST"
+      action="{{ url }}">
+    {{ form.csrf_token }}
+
+    {{ render_field(form.name) }}
+    {{ render_field(form.active) }}
+
+    <h4><a data-bs-toggle="collapse" href="#projectInfo" role="button" aria-expanded="true"
+           aria-controls="projectInfo">Project Info</a></h4>
+    <hr>
+    <div class="collapse show" id="projectInfo">
+        {{ render_field(form.application) }}
+        {{ render_field(form.business_area) }}
+        {{ render_field(form.entity) }}
+        {{ render_field(form.user_code) }}
+    </div>
+
+    <h4><a data-bs-toggle="collapse" href="#projectSettings" role="button" aria-expanded="false"
+           aria-controls="projectSettings">Proxy Settings</a></h4>
+    <hr>
+
+    <div class="collapse" id="projectSettings">
+        {{ render_field(form.http_proxy) }}
+        {{ render_field(form.https_proxy) }}
+        {{ render_field(form.environment_proxy) }}
+        {{ render_field(form.execution_proxy) }}
+    </div>
+
+    <h4>
+        <a data-bs-toggle="collapse" href="#driverSettings" role="button" aria-expanded="false"
+           aria-controls="driverSettings">Driver Settings</a>
+    </h4>
+    <hr>
+
+    <div class="collapse" id="driverSettings">
+        {{ render_field(form.update_driver) }}
+        {{ render_field(form.update_driver_use_proxy) }}
+    </div>
+
+    <h4><a data-bs-toggle="collapse" href="#runSettings" role="button" aria-expanded="false"
+           aria-controls="runSettings">Run Settings</a></h4>
+    <hr>
+    <div class="collapse" id="runSettings">
+        {{ render_field(form.continue_after_failed_step) }}
+        {{ render_field(form.autoretry) }}
+        {{ render_field(form.autoretry_attempts) }}
+        {{ render_field(form.autoretry_attempts_wait_seconds) }}
+    </div>
+
+        <h4><a data-bs-toggle="collapse" href="#keywordSettings" role="button" aria-expanded="false"
+           aria-controls="keywordsSettings">Pytalos Steps</a></h4>
+    <hr>
+    <div class="collapse" id="keywordSettings">
+        {{ render_field(form.web_keywords) }}
+        {{ render_field(form.api_keywords) }}
+        {{ render_field(form.accessibility_keywords) }}
+        {{ render_field(form.android_keywords) }}
+        {{ render_field(form.oracle_keywords) }}
+        {{ render_field(form.snowflake_keywords) }}
+        {{ render_field(form.data_keywords) }}
+        {{ render_field(form.ftp_keywords) }}
+        {{ render_field(form.functional_keywords) }}
+        {{ render_field(form.mail_keywords) }}
+        {{ render_field(form.host_keywords) }}
+        {{ render_field(form.mountebank_keywords) }}
+        {{ render_field(form.host_keywords) }}
+        {{ render_field(form.ssh_keywords) }}
+        {{ render_field(form.appian_keywords) }}
+        {{ render_field(form.autogui_keywords) }}
+    </div>
+
+    <h4><a data-bs-toggle="collapse" href="#environmentSettings" role="button" aria-expanded="false"
+           aria-controls="environmentSettings">Environment Settings</a></h4>
+    <hr>
+    <div class="collapse" id="environmentSettings">
+        {{ render_field(form.environment) }}
+        {{ render_field(form.language) }}
+        {{ render_field(form.repositories) }}
+    </div>
+
+    <h4><a data-bs-toggle="collapse" href="#integrationsSettings" role="button"
+           aria-expanded="false"
+           aria-controls="integrationsSettings">Integrations</a></h4>
+    <hr>
+    <div class="collapse" id="integrationsSettings">
+        <h5><a data-bs-toggle="collapse" href="#almSettings" role="button"
+               aria-expanded="false"
+               aria-controls="almSettings">ALM Settings</a></h5>
+        <hr>
+
+        <div class="collapse" id="almSettings">
+            {{ render_field(form.post_to_alm) }}
+            {{ render_field(form.attachments_pdf) }}
+            {{ render_field(form.attachments_docx) }}
+            {{ render_field(form.attachments_html) }}
+            {{ render_field(form.match_alm_execution) }}
+            {{ render_field(form.alm3_properties) }}
+            {{ render_field(form.replicate_folder_structure) }}
+            {{ render_field(form.scenario_name_as_run_name) }}
+        </div>
+
+        <h5><a data-bs-toggle="collapse" href="#octaneSettings" role="button"
+               aria-expanded="false"
+               aria-controls="octaneSettings">OCTANE Settings</a></h5>
+        <hr>
+        <div class="collapse" id="octaneSettings">
+            {{ render_field(form.post_to_octane) }}
+            {{ render_field(form.server) }}
+            {{ render_field(form.client_id) }}
+            {{ render_field(form.secret) }}
+            {{ render_field(form.shared_space) }}
+            {{ render_field(form.workspace) }}
+        </div>
+
+        <h5><a data-bs-toggle="collapse" href="#jiraSettings" role="button"
+               aria-expanded="false"
+               aria-controls="jiraSettings">JIRA Settings</a></h5>
+        <hr>
+        <div class="collapse" id="jiraSettings">
+            {{ render_field(form.post_to_jira) }}
+            {{ render_field(form.base_url) }}
+            {{ render_field(form.username) }}
+            {{ render_field(form.password) }}
+        </div>
+    </div>
+
+    <input class="btn btn-primary" type="submit" value="Save">
+</form>

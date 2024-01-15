@@ -1,0 +1,180 @@
+{% extends "base_template.html" %}
+{% block extra_head %}
+    <!--FancyBox css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css">
+    <!-- Fancybox js -->
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+    <div class="row overview">
+        <div class="col-md-12">
+            {% if categorization_tags %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ _('Categorized Errors') }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>{{ _('Error tag defined') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for tag in categorization_tags %}
+                                    {% set tag_index = loop.index %}
+                                    <tr>
+                                        <td><a href="#error-{{ tag_index }}">{{ tag_index }} - {{ tag }}</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ _('Features Overview') }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>{{ _('Feature name') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for current_feature in features %}
+                                    {% set feature_index = loop.index %}
+                                    <tr>
+                                        <td><a href="#feature-{{ feature_index }}">{{ feature_index }}
+                                            - {{ current_feature.feature_name }}</a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    {% if categorization_tags %}
+        {% for key, value in categorization_tags.items() %}
+            {% set tag_index = loop.index %}
+            <div class="row tests-results">
+            <div class="col-md-12">
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title" id="error-{{ loop_id|d(tag_index, true) }}">
+                        {{ tag_index }} - {{ key }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive step-data">
+                        <table class="table">
+                            {% for feature, scenarios in value.items() %}
+                                <tr>
+                                    <td colspan="4"><h4>{{ feature }}</h4></td>
+                                </tr>
+                                {% for scenario, steps in scenarios.items() %}
+                                    <tr>
+                                        <td colspan="4"><h5>{{ scenario }}</h5></td>
+                                    </tr>
+                                    {% for key, step in steps.items() %}
+                                        {% for current_step in step %}
+                                            <tr>
+                                                <td style="width: 50%; color:gray">
+                                                    {{ current_step.name }}
+                                                </td>
+                                                <td style="width: 50%; color: gray">
+                                                    {{ current_step.error }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        {% for feature in features %}
+            {% set feature_index = loop.index %}
+            <div class="row tests-results">
+            <div class="col-md-12">
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title" id="feature-{{ loop_id|d(feature_index, true) }}">
+                        {{ feature_index }} - {{ feature.feature_name }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive step-data">
+                        <table class="table">
+                            {% for scenario in feature.scenarios %}
+                                <tr>
+                                    <td colspan="4"><h5>{{ scenario.name }}:</h5></td>
+                                </tr>
+                                {% for step in scenario.steps %}
+                                    <tr>
+                                        <td style="width: 50%; color:gray">
+                                            {{ step.name }}
+                                        </td>
+                                        <td style="width: 50%; color: gray">
+                                            {{ step.error }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <button class="btn-scrolltop" id="btn_scrolltop"><i class="arrow-up"></i></button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <!--Go up -->
+    <script>
+        const btn_scrolltop = document.getElementById("btn_scrolltop")
+        btn_scrolltop.addEventListener('click', () => {
+            window.scrollTo(0, 0)
+        })
+
+        window.onscroll = () => {
+            add_btn_scrolltop()
+        }
+
+        const add_btn_scrolltop = () => {
+            if (window.scrollY < 300) {
+                btn_scrolltop.classList.remove("btn-scrolltop-on")
+            } else {
+                btn_scrolltop.classList.add("btn-scrolltop-on")
+            }
+        }
+
+    </script>
+
+    <!-- Custom Fancybox js -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".img-thumbnail").each((index, element) => {
+                $(element).parent().attr("href", $(element).attr("src"))
+            });
+        });
+    </script>
+{% endblock %}

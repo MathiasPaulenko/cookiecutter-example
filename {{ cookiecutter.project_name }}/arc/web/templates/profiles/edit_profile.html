@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}{{page_title}}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/file-text-editor.css') }}">
+{% endblock %}
+
+{% block main_content %}
+<button class="btn btn-outline-primary position-fixed" id="button_save" onclick="sendForm()" title="Save Changes"><i class="bi bi-save" style="font-size: 1.3rem;"></i></button>
+<div class="alert alert-success" id="animated_alert_success">File saved!</div>
+<div class="alert alert-danger" id="animated_alert_error">Error: Something went wrong</div>
+<div id="editor"></div>
+<form id="save_form" method="post" action="{{ url_for('features.save_file') }}">
+  {{ form.csrf_token }}
+  {{ form.file_content }}
+  {{ form.path }}
+  <input type="submit" value="Save" id="submit_form_button" hidden>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.24.1/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.24.1/mode-gherkin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.24.1/snippets/gherkin.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script defer src="{{ url_for('static', filename='js/file_editor.js') }}">
+</script>
+<script>
+  {% if data.file_lines is defined%}
+  let file_lines = {{data.file_lines | tojson}}
+  {%endif%}
+  {% if data.file_path is defined%}
+  let file_path_js = String("{{data.file_path}}")
+  {%endif%}
+  {% if data.type_file is defined%}
+  let type_file = String("{{data.type_file}}")
+  {%endif%}
+</script>
+
+{% endblock %}

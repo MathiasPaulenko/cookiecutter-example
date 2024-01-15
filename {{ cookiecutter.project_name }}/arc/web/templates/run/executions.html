@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}ConsoleLog{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/ace-builds@1.24.1/src-min-noconflict/ace.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/ace-builds@1.24.1/css/ace.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block main_content %}
+
+<form class="table-responsive" method="POST" action="{{ url_for('view_executions.stop_execution') }}">
+    {{ form.csrf_token }}
+    {{ form.pid }}
+    <button class="btn btn-danger mb-2 py-2 float-end" type="submit" id="abortExecution">
+        <i class="bi bi-stop-circle"></i>
+        Abort execution
+    </button>
+</form>
+<div id="messages" style="height: 80vh"></div>
+            <script>
+                function fetchMessages() {
+                    fetch('/get_messages')
+                        .then(response => response.json())
+                        .then(data => {
+                            editor.setValue('')
+                            if (data.status === "False"){
+                                $('#abortExecution').addClass("disabled");
+                                clearInterval(setIntervalId)
+                            }
+                            let new_text = ""
+                            data.messages.forEach(message => {
+                                new_text = new_text + message
+                            })
+                            editor.setValue(editor.getValue() + new_text, -1);
+                            new_text = null
+                            data = null
+                        })
+                        .catch(error => console.error('Error fetching messages:', error));
+                }
+                var editor;
+                editor = ace.edit("messages", {
+                    theme: "ace/theme/vibrant_ink",
+                    mode: "ace/mode/gherkin",
+                    value: ``,
+                    readOnly: true,
+                    fontSize: "14pt"
+                });
+                fetchMessages();
+                const setIntervalId = setInterval(fetchMessages, 500);
+            </script>
+
+{% endblock %}
+

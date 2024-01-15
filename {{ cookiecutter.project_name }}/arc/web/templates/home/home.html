@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block head %}
+<!--
+Add your custom scripts here.
+By example:
+<script async type="text/javascript" src="/static/js/home_functions.js"></script>
+-->
+<script type="text/javascript" src="{{ url_for('static', filename='js/create_chart.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bar_chart_executions.js') }}"></script>
+{% endblock %}
+
+{% block main_content %}
+<div class="row">
+    <div class="col-sm-6 col-md-6 col-lg-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="row home-card-grid">
+                    <div class="home-card-grid-left-box home-card-grid-blue">
+                        <i class="bi bi-collection-play"></i>
+                    </div>
+                    <div>
+                        <p class="fs-30">{{total_executions}}</p>
+                        <p>Total Executions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-6 col-lg-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="row home-card-grid">
+                    <div class="home-card-grid-left-box home-card-grid-green">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <div>
+                        <p class="fs-30">{{total_features}}</p>
+                        <p>Features in project</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-6 col-lg-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="row home-card-grid">
+                    <div class="home-card-grid-left-box home-card-grid-orange">
+                        <i class="bi bi-boxes"></i>
+                    </div>
+                    <div>
+                        <p class="fs-30">{{total_scenarios}}</p>
+                        <p>Scenarios in project</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-6 col-lg-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="row home-card-grid">
+                    <div class="home-card-grid-left-box home-card-grid-pink">
+                        <i class="bi bi-file-code"></i>
+                    </div>
+                    <div>
+                        <p class="fs-30">{{total_steps}}</p>
+                        <p>Steps in project</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h4 class="card-title">Executions statistics</h4>
+                <hr>
+                {% if execution is not none %}
+                    {% with
+                        chart_id='executions',
+                        labels=['Passed', 'Failed'],
+                        values=[
+                        execution.steps_passed,
+                        execution.steps_failed,
+                        execution.steps_skipped,
+                        ],
+                        colors=[
+                        "#21c576", "#ed1919"
+                        ],
+                        width = 200,
+                        height = 200,
+                        max_width = 744,
+                        max_height = 541
+                    %}
+                        {% include "utils/bar_chart_template.html" %}
+                    {% endwith %}
+                {% else %}
+                    {% with
+                        chart_id='executions',
+                        labels=['Passed', 'Failed'],
+                        values=[
+                        0,
+                        0,
+                        0,
+                        ],
+                        colors=[
+                        "#21c576", "#ed1919"
+                        ],
+                        width = 200,
+                        height = 200,
+                        max_width = 744,
+                        max_height = 541
+                    %}
+                        {% include "utils/bar_chart_template.html" %}
+                    {% endwith %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                {% if execution is not none %}
+                    <h4 class="card-title"><a href="{{url_for('executions.get_execution', execution_id=execution.id)}}">Results for execution #{{execution.id}}</a></h4>
+                    <hr>
+                        <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card card-transparent h-100">
+                                <div class="card-body">
+                                    <h4 class="card-title">Features</h4>
+                                    <hr>
+                                    {% with
+                                        chart_id='features_chart',
+                                        labels=['Passed', 'Failed'],
+                                        values=[
+                                        execution.features_passed,
+                                        execution.features_failed,
+                                        ],
+                                        colors=[
+                                        "#21c576","#ed1919"
+                                        ],
+                                        total_value=execution.total_features,
+                                        width = 792,
+                                        height = 200,
+                                        max_width = 792,
+                                        max_height = 200
+                                    %}
+                                    {% include "utils/chart_template.html" %}
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card card-transparent">
+                                <div class="card-body">
+                                    <h4 class="card-title">Last execution data</h4>
+                                    <hr>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <tr>
+                                                <th>Application:</th>
+                                                <td>{{execution.application}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>User code:</th>
+                                                <td>{{execution.user_code}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Business area:</th>
+                                                <td>{{execution.business_area}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Entity:</th>
+                                                <td>{{execution.entity}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Environment:</th>
+                                                <td>{{execution.environment}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Talos version:</th>
+                                                <td>{{execution.version}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Date:</th>
+                                                {% set args = [execution.start_time, 'Date'] %}
+                                                <td>{{args|format_date_or_time}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Time:</th>
+                                                {% set args = [execution.start_time, 'Time'] %}
+                                                <td>{{args|format_date_or_time}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Duration:</th>
+                                                {% set args = [execution.end_time, execution.start_time] %}
+                                                <td>{{args|get_duration_from_timestamps}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card card-transparent">
+                                <div class="card-body">
+                                    <h4 class="card-title">Scenarios</h4>
+                                    <hr>
+                                    {% with
+                                    chart_id='scenarios_chart',
+                                    labels=['Passed', 'Failed'],
+                                    values=[
+                                    execution.passed_scenarios,
+                                    execution.failed_scenarios,
+                                    ],
+                                    colors=[
+                                    "#21c576","#ed1919"
+                                    ],
+                                    total_value=execution.total_scenarios,
+                                    width = 792,
+                                    height = 200,
+                                    max_width = 792,
+                                    max_height = 200
+                                    %}
+                                    {% include "utils/chart_template.html" %}
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card card-transparent">
+                                <div class="card-body">
+                                    <h4 class="card-title">Steps</h4>
+                                    <hr>
+                                    {% with
+                                    chart_id='steps_chart',
+                                    labels=['Passed', 'Failed', 'Skipped'],
+                                    values=[
+                                    execution.steps_passed,
+                                    execution.steps_failed,
+                                    execution.steps_skipped,
+                                    ],
+                                    colors=[
+                                    "#21c576","#ed1919","#7ca1e3"
+                                    ],
+                                    total_value=execution.total_steps,
+                                    width = 792,
+                                    height = 200,
+                                    max_width = 792,
+                                    max_height = 200
+                                    %}
+                                    {% include "utils/chart_template.html" %}
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <h3 class="text-center">No data from last execution.</h3>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

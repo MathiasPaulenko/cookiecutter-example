@@ -1,0 +1,426 @@
+{% extends "base_template.html" %}
+{% block extra_head %}
+    <!--FancyBox css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css">
+    <!-- Fancybox js -->
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h5>
+               <a href="global_accessibility.html">{{_('Return to global accessibility report')}}</a>
+            </h5>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-2">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Rules results')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <canvas id="rules-results-chart" width="250" height="250" class="chartjs-render-monitor" style="display: block; width: 250px; height: 250px;" ></canvas>
+                        <script type="text/javascript">
+                            if ($("#rules-results-chart").length) {
+                              var areaData = {
+                                labels: ["{{_('Passes')}}", "{{_('Violations')}}"],
+                                datasets: [{
+                                    data: ['{{data.passes|count}}', '{{data.violations|count}}'],
+                                    backgroundColor: [
+                                       "#21c576","#ed1919"
+                                    ],
+                                    borderColor: "rgba(0,0,0,0)"
+                                  }
+                                ]
+                              };
+                              var areaOptions = {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                segmentShowStroke: false,
+                                cutout: "70%",
+                                elements: {
+                                  arc: {
+                                      borderWidth: 4
+                                  }
+                                },
+                                legend: {
+                                  display: false
+                                },
+                                tooltips: {
+                                  enabled: true
+                                }
+                              }
+                              var rulesResultsChartPlugins = [
+                                {
+                                    afterDraw: function(chart) {
+                                  var width = chart.width,
+                                      height = chart.height,
+                                      ctx = chart.ctx;
+
+                                  ctx.restore();
+                                  var fontSize = 3.125;
+                                  ctx.font = "500 " + fontSize + "em sans-serif";
+                                  ctx.textBaseline = "middle";
+                                  ctx.fillStyle = "#666";
+
+                                  var text = "{{data.passes|count + data.violations|count}}",
+                                      textX = Math.round((width - ctx.measureText(text).width) / 2),
+                                      textY = height / 2;
+                                  ctx.fillText(text, textX, textY+20);
+                                  ctx.save();
+                                }
+                                }
+                              ]
+                              var rulesResultsChartCanvas = $("#rules-results-chart").get(0).getContext("2d");
+                              var rulesResultsChart = new Chart(rulesResultsChartCanvas, {
+                                type: 'doughnut',
+                                data: areaData,
+                                options: areaOptions,
+                                plugins: rulesResultsChartPlugins
+                              });
+                            }
+                        </script>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 center-table-card">
+                            <p>{{_('Status')}}</p>
+                            <p>
+                                <i class="status-passed-icon"></i>
+                                {{_('Passed')}}
+                            </p>
+                            <p>
+                                <i class="status-failed-icon"></i>
+                                {{_('Failed')}}
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>{{_('Progress')}}</p>
+                            <p>{{passes_percent}} %</p>
+                            <p>{{violations_percent}} %</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">{{_('Impact results')}}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <canvas id="impact-results-chart" width="250" height="250" class="chartjs-render-monitor" style="display: block; width: 250px; height: 400px;" ></canvas>
+                        <script type="text/javascript">
+                            if ($("#impact-results-chart").length) {
+                              var areaData = {
+                                labels: ["{{_('Minor')}}", "{{_('Moderate')}}", "{{_('Serious')}}", "{{_('Critical')}}"],
+                                datasets: [{
+                                    label: "{{_('Rules impact')}}",
+                                    data: ['{{impact_results.minor}}', '{{impact_results.moderate}}', '{{impact_results.serious}}', '{{impact_results.critical}}'],
+                                    backgroundColor: [
+                                       "#21c576","#FFE356FF","#ff9007","#ed1919"
+                                    ],
+                                    barThickness: 50
+                                  }
+                                ]
+                              };
+                              var areaOptions = {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                segmentShowStroke: false,
+                                scale:{
+                                    stepSize: 1,
+                                    beginAtZero: true,
+                                },
+                                plugins:{
+                                    legend:{
+                                        display: false
+                                    }
+                                },
+                              }
+                              var impactResultsChartCanvas = $("#impact-results-chart").get(0).getContext("2d");
+                              var impactResultsChart = new Chart(impactResultsChartCanvas, {
+                                type: 'bar',
+                                data: areaData,
+                                options: areaOptions
+                              });
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Quality Gates</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            {% for quality_gate, value in quality_gates.items() %}
+                            <tr>
+                                <td>{{quality_gate}}</td>
+                                <td>
+                                    <i class="status-{{value}}-icon"></i>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Analysis info</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <td>{{_('Url tested')}}:</td>
+                                <td>{{data.url}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Execution start time')}}:</td>
+                                <td>{{global_data.results.start_time|format_datetime}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Execution end time')}}:</td>
+                                <td>{{global_data.results.end_time|format_datetime}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Environment')}}:</td>
+                                <td>{{global_data.environment}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Version')}}:</td>
+                                <td>{{global_data.version}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Application')}}:</td>
+                                <td>{{global_data.application}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Business area')}}:</td>
+                                <td>{{global_data.business_area}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Entity')}}:</td>
+                                <td>{{global_data.entity}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{_('Executed by user')}}:</td>
+                                <td>{{global_data.user_code}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row results">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs" id="accessibilityTab" role="tablist">
+                <li class="nav-item">
+                    <a href="#violations-tab-pane" class="nav-link active" id="violations-tab" data-bs-toggle="tab"
+                            aria-controls="violations-tab-pane"
+                            role="tab" aria-selected="true">{{_('Violations')}} <span
+                            class="badge bg-danger">{{data.violations|count}}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#passes-tab-pane" class="nav-link" id="passes-tab" data-bs-toggle="tab" aria-controls="passes-tab-pane"
+                            role="tab" aria-selected="false">{{_('Passes')}} <span
+                            class="badge bg-success">{{data.passes|count}}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#incomplete-tab-pane" class="nav-link" id="incomplete-tab" data-bs-toggle="tab"
+                            aria-controls="incomplete-tab-pane"
+                            role="tab" aria-selected="false">{{_('Incomplete')}}
+                        <span class="badge bg-warning">{{data.incomplete|count}}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#inapplicable-tab-pane" class="nav-link" id="inapplicable-tab" data-bs-toggle="tab"
+                            aria-controls="inapplicable-tab-pane"
+                            role="tab" aria-selected="false">{{_('Inapplicable')}}
+                        <span class="badge bg-info">{{data.inapplicable|count}}</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content" id="accessibilityTabContent">
+                <div class="tab-pane fade show active" id="violations-tab-pane" role="tabpanel"
+                     aria-labelledby="violations-tab"
+                     tabindex="0">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{_('Violations rules overview')}}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th>{{_('Name')}}</th>
+                                            <th>{{_('Rule id')}}</th>
+                                            <th>{{_('Impact')}}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in data.violations %}
+                                        <tr>
+                                            <td><a href="#violations-{{loop.index}}">{{loop.index}} -
+                                                {{item.help}}</a></td>
+                                            <td>{{item.id}}</td>
+                                            <td>{{item.impact|d(_('No impact'), true)}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% for item in data.violations %}
+                        {% with rule=item, loop_index=loop.index, rule_type="violations" %}
+                            {% include "accessibility_rule_template.html" %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+                <div class="tab-pane fade" id="passes-tab-pane" role="tabpanel" aria-labelledby="passes-tab"
+                     tabindex="0">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{_('Passes rules overview')}}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th>{{_('Name')}}</th>
+                                            <th>{{_('Rule id')}}</th>
+                                            <th>{{_('Impact')}}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in data.passes %}
+                                        <tr>
+                                            <td><a href="#passes-{{loop.index}}">{{loop.index}} - {{item.help}}</a></td>
+                                            <td>{{item.id}}</td>
+                                            <td>{{item.impact|d(_('No impact'), true)}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% for item in data.passes %}
+                        {% with rule=item, loop_index=loop.index, rule_type="passes" %}
+                            {% include "accessibility_rule_template.html" %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+                <div class="tab-pane fade" id="incomplete-tab-pane" role="tabpanel" aria-labelledby="incomplete-tab"
+                     tabindex="0">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{_('Incomplete rules overview')}}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th>{{_('Name')}}</th>
+                                            <th>{{_('Rule id')}}</th>
+                                            <th>{{_('Impact')}}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in data.incomplete %}
+                                        <tr>
+                                            <td><a href="#incomplete-{{loop.index}}">{{loop.index}} - {{item.help}}</a>
+                                            </td>
+                                            <td>{{item.id}}</td>
+                                            <td>{{item.impact|d(_('No impact'), true)}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% for item in data.incomplete %}
+                        {% with rule=item, loop_index=loop.index, rule_type="incomplete" %}
+                            {% include "accessibility_rule_template.html" %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+                <div class="tab-pane fade" id="inapplicable-tab-pane" role="tabpanel" aria-labelledby="inapplicable-tab"
+                     tabindex="0">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{_('Inapplicable rules overview')}}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th>{{_('Name')}}</th>
+                                            <th>{{_('Rule id')}}</th>
+                                            <th>{{_('Impact')}}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in data.inapplicable %}
+                                        <tr>
+                                            <td><a href="#inapplicable-{{loop.index}}">{{loop.index}} -
+                                                {{item.help}}</a></td>
+                                            <td>{{item.id}}</td>
+                                            <td>{{item.impact|d(_('No impact'), true)}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% for item in data.inapplicable %}
+                        {% with rule=item, loop_index=loop.index, rule_type="inapplicable" %}
+                            {% include "accessibility_rule_template.html" %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</div>
+
+{% block extra_js %}
+<!-- Custom Fancybox js -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".img-thumbnail").each((index, element) => {
+            $(element).parent().attr("href", $(element).attr("src"))
+        });
+    });
+</script>
+{% endblock %}

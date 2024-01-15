@@ -1,0 +1,113 @@
+msgid "Feature"
+msgstr "Característica"
+
+msgid "Scenario"
+msgstr "Escenario"
+
+msgid "Feature description"
+msgstr "Descripción de característica"
+
+msgid "Scenario description"
+msgstr "Descripción de escenario"
+
+msgid "Application"
+msgstr "Aplicación"
+
+msgid "Business area"
+msgstr "Area de negocio"
+
+msgid "Entity"
+msgstr "Entidad"
+
+msgid "Executed by user"
+msgstr "Ejecutado por el usuario"
+
+msgid "Test Case Execution Summary"
+msgstr "Resumen de ejecución del caso de prueba"
+
+msgid "Result"
+msgstr "Resultado"
+
+msgid "Number of steps"
+msgstr "Numero de pasos"
+
+msgid "Correct steps"
+msgstr "Pasos exitosos"
+
+msgid "Incorrect steps"
+msgstr "Pasos fallidos"
+
+msgid "No Run Steps"
+msgstr "Pasos no ejecutados"
+
+msgid "No Run steps"
+msgstr "Pasos no ejecutados"
+
+msgid "Start"
+msgstr "Comienzo"
+
+msgid "End"
+msgstr "Finalizado"
+
+msgid "Duration"
+msgstr "Duracion"
+
+msgid "Execution Type"
+msgstr "Tipo de ejecución"
+
+msgid "Environment"
+msgstr "Entorno"
+
+msgid "Passed"
+msgstr "Exito"
+
+msgid "Failed"
+msgstr "Fallido"
+
+msgid "No Run"
+msgstr "No ejecutado"
+
+msgid "Steps"
+msgstr "Pasos"
+
+msgid "Step"
+msgstr "Paso"
+
+msgid "Description"
+msgstr "Descripcion"
+
+msgid "Skipped"
+msgstr "Omitido"
+
+msgid "Go to Summary Table"
+msgstr "Ir a la tabla de resumen"
+
+msgid "Expected result"
+msgstr "Resultado esperado"
+
+msgid "Obtained result"
+msgstr "Resultado obtenido"
+
+msgid "Additional text"
+msgstr "Texto adicional"
+
+msgid "Method"
+msgstr "Método"
+
+msgid "Status Code"
+msgstr "Código de estado"
+
+msgid "Remote Address"
+msgstr "Dirección remota"
+
+msgid "Request headers"
+msgstr "Cabeceras de la petición"
+
+msgid "Request body"
+msgstr "Cuerpo de la petición"
+
+msgid "Request Response"
+msgstr "Respuesta de la petición"
+
+
+

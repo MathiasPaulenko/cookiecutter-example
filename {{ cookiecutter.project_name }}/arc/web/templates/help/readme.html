@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block head %}
+<!--
+Add your custom scripts here.
+By example:
+<script async type="text/javascript" src="/static/js/home_functions.js"></script>
+-->
+{% endblock %}
+
+{% block main_content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body readme-page">
+                {{readme|safe}}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

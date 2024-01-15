@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block main_content %}
+    <form class="table-responsive" method="POST" action="{{ url_for('run_features.run_multiple_features') }}">
+        <div id="card-run" class="card mb-4 margin-right-md">
+            <div class="card-body">
+                <h4 class="card-title">{{ page_title }}</h4>
+                <table id="table" class="table" aria-describedby="Features table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Configuration</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {{ form.csrf_token }}
+                                {{ form.name_to_execute(value="name") }}
+                                <td class="col-4">
+                                    {{ form.conf_properties(class_="form-select") }}
+                                </td>
+                                <td class="col-4"></td>
+                                <td class="col-4">
+                                        <button class="btn btn-primary mb-2 py-2 float-end" type="submit" id="runExecution">
+                                            <i class="bi bi-play-fill"></i>
+                                            Run features
+                                        </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="card-home" class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title required">Select Features</h4>
+                <div class="col mx-1 mt-4 table-responsive">
+                    <table id="features-table" class="table table-hover" aria-describedby="Features table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Selected</th>
+                            <th scope="col">Feature</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Details</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for i, feature in data.files.items() %}
+                            <tr>
+                                <td class="col-1">
+                                    <input class="form-check" type="checkbox" value="{{ feature['filename'] }}" name="Feature">
+                                </td>
+                                <td>{{ feature['filename'] }}</td>
+                                <td>
+                                    {% for x in feature['feature_description'] %}
+                                        {{ x }}
+                                    {% endfor %}
+                                </td>
+                                <td colspan="2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#show_details"
+                                            data-bs-feature-file="{{ feature['filename'] }}.feature"
+                                            title="Feature Details">
+                                        <i class="bi bi-file-text"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <!-- Details Modal-->
+    <div class="modal fade" id="show_details" tabindex="-1" aria-labelledby="detailsModal" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModal">New message</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="modalFeatureDetail"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+    <script src="{{ url_for('static', filename='js/run.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/feature_detail.js') }}"></script>
+    <script>
+        set_features_data({{ data.files|tojson }})
+        pid = {{ pid }}
+        portal_running = '{{portal_running}}'
+    </script>
+{% endblock %}

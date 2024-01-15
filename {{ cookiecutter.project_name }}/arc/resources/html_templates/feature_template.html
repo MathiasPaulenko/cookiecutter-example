@@ -1,0 +1,313 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h5><a href="global.html">{{ _('Return to global report') }}</a></h5>
+            </div>
+        </div>
+        <div class="row results">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ _('Scenarios') }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% with
+                                    chart_id='scenarios_chart',
+                                    labels=[_('Passed'), _('Failed')],
+                                    values=[
+                                        feature.passed_scenarios,
+                                        feature.failed_scenarios,
+                                    ],
+                                    colors=[
+                                        "#21c576","#ed1919"
+                                    ],
+                                    total_value=feature.total_scenarios %}
+                                {% include "chart_template.html" %}
+                            {% endwith %}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 offset-md-2">
+                                <p>{{ _('Status') }}</p>
+                                <p>
+                                    <i class="status-passed-icon"></i>
+                                    {{ _('Passed') }}
+                                </p>
+                                <p>
+                                    <i class="status-failed-icon"></i>
+                                    {{ _('Failed') }}
+                                </p>
+                            </div>
+                            <div class="col-md-3">
+                                <p>{{ _('Progress') }}</p>
+                                <p>{{ feature.scenarios_passed_percent }} %</p>
+                                <p>{{ feature.scenarios_failed_percent }} %</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ _('Steps') }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% with
+                                chart_id='steps_chart',
+                                labels=[_('Passed'), _('Failed'), _('Skipped')],
+                                values=[
+                                    feature.steps_passed,
+                                    feature.steps_failed,
+                                    feature.steps_skipped,
+                                ],
+                                colors=[
+                                    "#21c576","#ed1919", "#7ca1e3"
+                                ],
+                                total_value=feature.total_steps %}
+                                {% include "chart_template.html" %}
+                            {% endwith %}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 offset-md-2">
+                                <p>{{ _('Status') }}</p>
+                                <p>
+                                    <i class="status-passed-icon"></i>
+                                    {{ _('Passed') }}
+                                </p>
+                                <p>
+                                    <i class="status-failed-icon"></i>
+                                    {{ _('Failed') }}
+                                </p>
+                                <p>
+                                    <i class="status-skipped-icon"></i>
+                                    {{ _('Skipped') }}
+                                </p>
+                            </div>
+                            <div class="col-md-3">
+                                <p>{{ _('Progress') }}</p>
+                                <p>{{ feature.steps_passed_percent }} %</p>
+                                <p>{{ feature.steps_failed_percent }} %</p>
+                                <p>{{ feature.steps_skipped_percent }} %</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ _('Run Info') }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <td>{{ _('Description') }}:</td>
+                                    <td>{{ feature.description|join(" ") }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Operating system') }}:</td>
+                                    <td>{{ feature.operating_system }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Driver') }}:</td>
+                                    <td>{{ feature.driver }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Total Scenarios') }}:</td>
+                                    <td>{{ feature.total_scenarios }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Total Steps') }}:</td>
+                                    <td>{{ feature.total_steps }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Passed Steps') }}:</td>
+                                    <td>{{ feature.steps_passed }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Failed Steps') }}:</td>
+                                    <td>{{ feature.steps_failed }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Skipped steps') }}:</td>
+                                    <td>{{ feature.steps_skipped }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Execution start time') }}:</td>
+                                    <td>{{ feature.start_time|format_datetime }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Execution end time') }}:</td>
+                                    <td>{{ feature.end_time|format_datetime }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Duration') }}:</td>
+                                    <td>{{ feature.duration|get_duration }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Environment') }}:</td>
+                                    <td>{{ global_data.environment }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Version') }}:</td>
+                                    <td>{{ global_data.version }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Application') }}:</td>
+                                    <td>{{ global_data.application }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Business area') }}:</td>
+                                    <td>{{ global_data.business_area }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Entity') }}:</td>
+                                    <td>{{ global_data.entity }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('Executed by user') }}:</td>
+                                    <td>{{ global_data.user_code }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row overview">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ _('Scenarios Overview') }}
+                            {% if feature.status == 'failed' %}
+                                <button class="btn btn-danger float-end" type="button" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">{{ _('View errors') }}
+                                </button>
+                            {% endif %}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>
+                                            {{_('Scenario name')}}
+                                        </th>
+                                        <th>
+                                            {{_('Tags')}}
+                                        </th>
+                                        <th class="text-center">
+                                            {{_('Status')}}
+                                        </th>
+                                        <th style="text-align: center">
+                                            {{_('Total steps')}}
+                                        </th>
+                                        <th style="text-align: center">
+                                            {{_('Steps Passed')}}
+                                        </th>
+                                        <th style="text-align: center">
+                                            {{_('Steps Failed')}}
+                                        </th>
+                                        <th style="text-align: center">
+                                            {{_('Steps Skipped')}}
+                                        </th>
+                                        <th>
+                                            {{_('Duration')}}
+                                        </th>
+                                        <th>
+                                            {{_('Description')}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for scenario in feature.elements %}
+                                    {% if scenario.type != "background" %}
+                                        <tr>
+                                            <td>
+                                                <a href="./scenario_{{ scenario.scenario_file_name }}.html">{{ scenario.name }}</a>
+                                            </td>
+                                            <td>
+                                                <pre>{{ scenario.tags|join('\n') }}</pre>
+                                            </td>
+                                            <td class="text-center">
+                                                <i class="status-{{ scenario.status }}-icon"></i>
+                                            </td>
+                                            <td style="text-align: center">{{scenario.total_steps}}</td>
+                                            <td style="text-align: center">{{scenario.steps_passed}}</td>
+                                            <td style="text-align: center">{{scenario.steps_failed}}</td>
+                                            <td style="text-align: center">{{scenario.steps_skipped}}</td>
+                                            <td>{{scenario.duration|get_duration}}</td>
+                                            <td>{{scenario.description|join(" ")|d('-')}}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if feature.status == 'failed' %}
+        <div class="offcanvas offcanvas-bottom offcanvas-bottom-xl" tabindex="-1" id="offcanvasBottom"
+             aria-labelledby="offcanvasBottomLabel">
+            <div class="offcanvas-header">
+                <h3 class="offcanvas-title text-danger" id="offcanvasBottomLabel">{{ _('Failed Scenarios') }}</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <hr>
+            <div class="offcanvas-body">
+                <h3>Scenarios list:</h3>
+                <ul class="list-group list-group-flush">
+                {% for scenario in feature.elements %}
+                    {% if scenario.status == 'failed' %}
+                        <li class="list-group-item">
+                            <a href="#offcanvas-{{ loop.index }}">{{ scenario.name }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+                <hr>
+                {% for scenario in feature.elements %}
+                    {% if scenario.status == 'failed' %}
+                        <h4 id="offcanvas-{{ loop.index }}">Scenario: <a href="./scenario_{{ scenario.scenario_file_name }}.html">{{ scenario.name }}</a></h4>
+                        <ul class="list-group list-group-flush">
+                        {% for step in scenario.steps %}
+                                {% if step.result is defined and step.result.status == "failed" %}
+                                <li class="list-group-item">
+                                    <h5 id="step-{{ loop.index }}">
+                                        <a href="./scenario_{{ scenario.scenario_file_name }}.html#step-{{ loop.index }}">
+                                            Step.{{ loop.index }} - {{ step.keyword }} {{ step.name }}</a>
+                                    </h5>
+                                    {% if step.result and step.result.error_message %}
+                                        <p class="mb-0">{{ _('Result:') }}</p>
+                                        <pre>
+                                            <code>
+                                                {{ step.result.error_message|d('-') }}
+                                            </code>
+                                        </pre>
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                        <hr>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}
+
